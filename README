@@ -3,9 +3,9 @@
 1. DESCRIZIONE
 
 Programmino a linea di comando che splitta/codifica i file audio rippati 
-su una sola traccia (dotati di cue-file) per preservare la fedeltà al CD 
+su una sola traccia (dotati di cue-file) per preservare la fedeltÃ  al CD 
 originale. Questo tipo di tecnica viene definita "cue splitting".
-Pysplitcue consente di splittare e allo stesso tempo può decodificare/codificare 
+Pysplitcue consente di splittare e allo stesso tempo decodificare/codificare 
 traccie in formato WAV, FLAC e APE. La funzione che svolge il programma 
 necessita della presenza del file *.cue nella medesima directory della 
 traccia musicale.
