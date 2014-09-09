@@ -1,0 +1,12 @@
++--------------------------------+
+August 25 2012  Version 0.6
++--------------------------------+
+- Modified the program manual (I hope it is more understandable)
+
+- Adjusted positional parameters in this order: program_name > option > path-name (optional) 
+
+
++--------------------------+
+Nov. 09  2010  Version 0.5
++--------------------------+
+Initial release 

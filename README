@@ -1,0 +1,28 @@
+
+
+1. DESCRIZIONE
+
+Programmino a linea di comando che splitta/codifica i file audio rippati 
+su una sola traccia (dotati di cue-file) per preservare la fedeltà al CD 
+originale. Questo tipo di tecnica viene definita "cue splitting".
+Pysplitcue consente di splittare e allo stesso tempo può decodificare/codificare 
+traccie in formato WAV, FLAC e APE. La funzione che svolge il programma 
+necessita della presenza del file *.cue nella medesima directory della 
+traccia musicale.
+I file di origine non saranno rimossi ne modificati in alcun modo.
+
+combinazioni di conversione:
+
+Splitting da .wav a .wav, da .wav a .flac, da .wav ad .ape  
+da .flac a .wav, da flac a flac, da .flac ad .ape,
+da .ape a .wav, da .ape a .flac, da ape ad ape
+
+
+Dipendenze:
+*  python2.6
+*  flac
+*  cuetools
+*  shntool
+*  mac
+
+L'installazione comprende una pagina man e un help (-help o -h)
