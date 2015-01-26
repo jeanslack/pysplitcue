@@ -61,5 +61,26 @@ Extra dependencies for build package with distutils:
 	SLACKWARE:
 				pysetuptools
 				(http://slackbuilds.org/repository/14.1/python/pysetuptools/)
-
+				
+				Is available a SlackBuild script to build package .tgz or .gz 
+				for Slackware distribution that you can download at:
+				https://github.com/jeanslack/My-Repo-Slackware/tree/master/slackware/multimedia/pysplitcue
+				
+				If you want download entire content directory quickly, open a terminal
+				window in a your path and type:
+				svn checkout https://github.com/jeanslack/My-Repo-Slackware/trunk/
+				slackware/multimedia/pysplitcue
+				
+				Then download the Videomass tarball source code at:
+				http://jeanslack.github.io/Videomass/downloads.html
+				..and place it into slackbuild folder.
+				
+				For instructions on how to use the SlackBuilds, see:
+				http://slackbuilds.org/howto/
+				http://www.slackwiki.com/SlackBuild_Scripts
+				http://www.slacky.eu/slacky/Slackware_%26_SlackBuild
+				
+				Remember: first install setuptools
+--------------------------------------------------------------------------------
 The installation includes a man page
+--------------------------------------------------------------------------------
