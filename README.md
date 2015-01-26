@@ -19,20 +19,6 @@ Copyright © 2010 - 2015 Gianluca Pernigotto
 
 --------------------------------------------------------------------------------
 
-Splitting combinations from:
-
-	.wav to .wav
-	.wav to .flac
-	.wav to .ape  
-	.flac to .wav
-	.flac to .flac
-	.flac to .ape
-	.ape to .wav
-	.ape to .flac
-	.ape to .ape
-	
---------------------------------------------------------------------------------
-
 Dependencies requires:
 
 	python >=2.6 (no python 3)
@@ -45,9 +31,41 @@ Dependencies recommended:
 	mac or monkeys-audio
 	wavpack
 	
---------------------------------------------------------------------------------
+Use
+-------
 
-pysplitcue is not require installation, but if you are interested build an 
+- Unzip the sources tarball of pysplitcue
+- Open a terminal window in unziped folder and type:
+
+		pysplitcue wav:flac '/dir/mydir/with my cue file and one track wav'
+
+this split and convert a wav audio file in a flac format.
+
+Splitting combinations:
+
+.wav to .wav
+
+		wav:wav
+
+.wav to .ape  
+
+		flac:wav
+
+.flac to .flac
+
+		flac:ape
+
+.ape to .wav
+
+		ape:flac
+
+.ape to .ape
+
+		ape:ape
+
+etc.
+
+pysplitcue not require installation, but if you are interested build an 
 installable package, see below:
 
 Installation
@@ -56,7 +74,7 @@ Installation
 * DEBIAN:
 Extra dependencies for build package with distutils:
 
-	apt-get install python-all python-stdeb fakeroot
+		apt-get install python-all python-stdeb fakeroot
 			
 (see the setup.py script-file for more info on how-to build .deb package)
 			
