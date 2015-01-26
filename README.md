@@ -35,11 +35,12 @@ Use
 -------
 
 - Unzip the sources tarball of pysplitcue
-- Open a terminal window in unziped folder and type:
+- Open a terminal window in unzipped folder and type:
 
 		pysplitcue wav:flac '/dir/mydir/with my cue file and one track wav'
 
 this split and convert a wav audio file in a flac format.
+
 
 Splitting combinations:
 
@@ -49,13 +50,13 @@ Splitting combinations:
 
 .wav to .ape  
 
-		flac:wav
+		wav:ape
 
 .flac to .flac
 
-		flac:ape
+		flac:flac
 
-.ape to .wav
+.ape to .flac
 
 		ape:flac
 
@@ -71,13 +72,19 @@ Installation
 pysplitcue not require installation, but if you are interested build an 
 installable package, see below:
 
+
 * DEBIAN:
 
 Extra dependencies for build package with distutils:
 
-		apt-get install python-all python-stdeb fakeroot
+		# apt-get install python-all python-stdeb fakeroot
 
-(see the setup.py script-file for more info on how-to build .deb package)
+Enter in unzipped sources folder and type (with not root):
+
+		python setup.py --command-packages=stdeb.command sdist_dsc
+
+see the setup.py script-file for more info on how-to build .deb package
+
 
 * SLACKWARE:
 
@@ -95,7 +102,7 @@ Then download the Videomass tarball source code at:
 
 [https://github.com/jeanslack/pysplitcue/releases](https://github.com/jeanslack/pysplitcue/releases)
 
-..and place it into slackbuild folder.
+..and place it into slackbuild folder unzipped.
 
 For instructions on how to use the SlackBuilds, see:
 
