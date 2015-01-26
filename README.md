@@ -65,38 +65,44 @@ Splitting combinations:
 
 etc.
 
-pysplitcue not require installation, but if you are interested build an 
-installable package, see below:
-
 Installation
 -------
 
+pysplitcue not require installation, but if you are interested build an 
+installable package, see below:
+
 * DEBIAN:
+
 Extra dependencies for build package with distutils:
 
 		apt-get install python-all python-stdeb fakeroot
-			
+
 (see the setup.py script-file for more info on how-to build .deb package)
-			
+
 * SLACKWARE:
 
 First require pysetuptools at: [slackbuild.org](http://slackbuilds.org/repository/14.1/python/pysetuptools/)
-				
-Is available a SlackBuild script to build package .tgz or .gz for Slackware 
-distribution that you can see at:
+
+Is available a SlackBuild script to build package .tgz or .gz for Slackware distribution that you can see at:
+
 [my slackbuild repository](https://github.com/jeanslack/My-Repo-Slackware/tree/master/slackware/multimedia/pysplitcue)
-				
+
 If you want download entire content directory quickly, open a terminal window in a your path and type:
-	svn checkout https://github.com/jeanslack/My-Repo-Slackware/trunk/slackware/multimedia/pysplitcue
-				
+
+		svn checkout https://github.com/jeanslack/My-Repo-Slackware/trunk/slackware/multimedia/pysplitcue
+
 Then download the Videomass tarball source code at:
+
 [https://github.com/jeanslack/pysplitcue/releases](https://github.com/jeanslack/pysplitcue/releases)
 
 ..and place it into slackbuild folder.
-				
+
 For instructions on how to use the SlackBuilds, see:
+
 [http://slackbuilds.org/howto/](http://slackbuilds.org/howto/)
+
 [http://www.slackwiki.com/SlackBuild_Scripts](http://www.slackwiki.com/SlackBuild_Scripts)
+
 [http://www.slacky.eu/slacky/Slackware_%26_SlackBuild](http://www.slacky.eu/slacky/Slackware_%26_SlackBuild)
 
 Remember: first install pysetuptools
