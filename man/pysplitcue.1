@@ -1,80 +1,80 @@
 .TH PYSPLITCUE 1
-.SH NOME
+.SH NAME
 .B pysplitcue 
-\- Divide/splitta i file audio rippati su unica traccia nei formati
-WAV, FLAC e APE. Il programma è scritto in python. 
-.SH SINTASSI
+\- cue splitting audio files 
+when ripped on one track (with cue-file) to preserve fidelity to Original CompactDisk. 
+.SH SYNOPSIS
 .B pysplitcue
 .I OPTION
 .I [PATH]  
-.SH DESCRIZIONE
-Programmino a linea di comando che splitta/codifica i file audio rippati su una
-sola traccia (dotati di cue-file) per preservare la fedeltà al CD originale. 
-Questo tipo di tecnica viene definita "cue splitting".
-Pysplitcue consente di splittare e allo stesso tempo decodificare/codificare traccie in formato WAV, FLAC e APE.
-.BR Nota:
-La funzione che svolge il programma necessita della presenza del file *.cue
-nella medesima directory della traccia musicale.
-I file di origine non saranno rimossi ne modificati in alcun modo. 
-.SH USO
-Pysplitcue, accetta fino a tre parametri posizionali o argomenti: il programma, l'opzione e il path-name. Il path-name è facoltativo, questo dipende da come si intende lavorare.  
-Il tipo di opzione da specificare è obbligatoria e andrà immessa, come parametro posizionale, dopo il nome del programma. Essa è formata da un input, un separatore (:) e un output. Input ed output prendono i nomi delle estensioni di formato. La logica è di porre il formato di origine, cioè di input-file, alla vostra sinistra e quello di output-file (cioè i file che verranno processati) alla vostra destra dopo il separatore. L'esempio seguente mostra un possibile splitting/encoding dal formato wav al formato flac. 
+.SH DESCRIPTION
+Small and useful command line program for cue splitting audio files when ripped on one track (with cue-file) to preserve fidelity to
+Original CompactDisk.
+This work with Wav, Flac and Ape audio formats and if need its enable to decode / encode audio-tracks.
+Requires the presence of the * .cue file in the same directory music track
+.BR Note:
+The function that performs the program requires the presence of the file * .cue in the same directory of the music track.
+The source files will not be removed nor altered in any way. 
+.SH USE
+Pysplitcue accept three positionals parameters or arguments:
+program-name > option > path-name. The path-name is not mandatory.
+The option is mandatory and will always specified after program name. It is formed by an input, a separator (:) and an output. 
+Input and output take only the format names (extension) without dot. Example: 
 .TP
-.B pysplitcue  wav:flac [/path/Name/] 
+.B pysplitcue  wav:flac /path/Name/directory 
+.TP
+This split and convert wav file to flac audio tracks
 
-.SH OPZIONI
-Qui vengono elencate tutte le possibili combinazioni.
+.SH OPTIONS
+It lists all the possible combinations.
 .TP
 .B wav:wav        
-Spitting da .wav a .wav
+
 .TP
 .B wav:flac       
-Spitting e conversione da .wav a .flac
+
 .TP
 .B wav:ape        
-Spitting e conversione da .wav ad .ape
+
 .TP
 .B flac:wav       
-Spitting e conversione da .flac a .wav
+
 .TP
 .B flac:flac      
-Splitting da flac a flac
+
 .TP
 .B flac:ape       
-Spitting e conversione da .flac ad .ape
+
 .TP
 .B ape:wav        
-Spitting e conversione da .ape a .wav
+
 .TP
 .B ape:flac       
-Spitting e conversione da .ape a .flac
+
 .TP
 .B ape:ape        
-Splitting da ape ad ape
-.SH ALTRE OPZIONI
+
+.SH OTHER OPTIONS
 .TP
 .B \-v, \-\-version 
-Stampa la versione e la data del programma ed esce.
+print program version/date and exit
 .TP
 .B \-h, \-\-help
-Mostra un breve aiuto sulle opzioni contestuali ed esce.
-.SH ESEMPI
-Possibilità di chiamata:
+Show a shot help on the contestual options and exit
+.SH EXAMPLES
 .TP
 .B pysplitcue  flac:flac '/home/my name/'
-Dividere una traccia wav in flac:
 .TP
 .B pysplitcue wav:ape
-In questo caso è stato omesso il path-name
 .SH "SEE ALSO"
 .BR flac (1),
 .BR shntool (1),
 .BR cuetools (1),
 .SH AUTHORS
-Written by Gianluca Pernigotto, Alias: Jean-Luc Pernigò <jeanlucperni@gmail.com> .
+Written by Gianluca Pernigotto, Alias: Jean-Luc PernigÃ² <jeanlucperni@gmail.com> .
 Homepage: http://itamburiditux.blogspot.com/
 .SH COPYRIGHT
-Copyright  ©  2010  Free Software Foundation, Inc.  License GPLv3+: GNU
+Copyright  Â©  2010  Free Software Foundation, Inc.  License GPLv3+: GNU
 GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 This is free software: you are free  to  change  and  redistribute  it.
 There is NO WARRANTY, to the extent permitted by law.

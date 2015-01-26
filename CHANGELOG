@@ -1,12 +1,27 @@
 +--------------------------------+
+January 26 2015  Version 0.6.1
++--------------------------------+
+
+- This is first stable release
+
+- Translation done completely in English 
+
+- Make a setup.py and MANIFEST.in for building a package for your Linux 
+  distribution (Debian and derived, Slackware)
+  
+- It was clean the main executable code
+
++--------------------------------+
 August 25 2012  Version 0.6
 +--------------------------------+
 - Modified the program manual (I hope it is more understandable)
 
-- Adjusted positional parameters in this order: program_name > option > path-name (optional) 
+- Adjusted positional parameters in this order: 
+  program_name > option > path-name (optional) 
 
 
 +--------------------------+
 Nov. 09  2010  Version 0.5
 +--------------------------+
-Initial release 
+
+Initial not public release 

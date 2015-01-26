@@ -1,6 +1,0 @@
-
-Usage: pysplitcue OPTIONS ['/path name/My directory/']
-Prova:
-    "pysplitcue --help"    Per l'uso informativo generico
-oppure:         
-    "pysplitcue -h"        Per l'uso informativo generico
