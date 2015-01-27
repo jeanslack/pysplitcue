@@ -5,13 +5,13 @@
 # 
 #########################################################
 # Name: setup.py
-# Porpose: script for building Videomass.app and package for install
-# Platform: Mac OsX, Gnu/Linux
-# Writer: Gianluca Pernigoto <jeanlucperni@gmail.com>
-# Copyright: (c) 2014 Gianluca Pernigoto <jeanlucperni@gmail.com>
+# Porpose: script for building pysplitcue and package for install
+# Platform: Gnu/Linux
+# Writer: jeanslack <jeanlucperni@gmail.com>
+# Copyright: © 2015 jeanslack <jeanlucperni@gmail.com>
 # license: GPL3
 # Rev (01) September 24 2014
-# Rev (02) January 21 2015
+# Rev (02) January 26 2015
 #########################################################
 
 from distutils.core import setup
