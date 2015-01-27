@@ -81,7 +81,9 @@ Extra dependencies for build package with distutils:
 
 Enter in unzipped sources folder and type (with not root):
 
-		python setup.py --command-packages=stdeb.command sdist_dsc
+		python setup.py --command-packages=stdeb.command bdist_deb
+
+This should create a python-pysplitcue_version_all.deb in the new deb_dist directory.
 
 see the setup.py script-file for more info on how-to build .deb package
 
