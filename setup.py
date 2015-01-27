@@ -88,7 +88,7 @@ def LINUX_DEBIAN_UBUNTU(id_distro, id_version):
 	# ('dir/file destination of the data', ['dir/file on current place sources']
 	# even path must be relative-path
 	DATA_FILES = [
-		('usr/share/man/man1/pysplitcue.1', ['man/pysplitcue.1']),
+		('share/man/man1', ['man/pysplitcue.1.gz']),
 				]
 	
 	DEPENDENCIES = ['python >=2.6']
