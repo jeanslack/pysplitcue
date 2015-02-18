@@ -2,6 +2,8 @@
 *.pyc
 dist
 build
+deb_dist
+*.egg-info
 *.DS_Store
 *.directory
 *~
