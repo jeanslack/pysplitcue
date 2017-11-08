@@ -1,0 +1,5 @@
+- There is not a control interface for error, when not exist the shntool
+  !exit with done msg, but is error!
+  make this soon
+  
+ - Include this file into packages (setup.py and also see the pysplitcue.slackbuild)
