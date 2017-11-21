@@ -8,16 +8,15 @@
 # Porpose: script for cut audio file with cue file
 # Platform: Mac OsX, Gnu/Linux
 # Writer: Gianluca Pernigoto <jeanlucperni@gmail.com>
-# Copyright: (c) 2010-2014 Gianluca Pernigoto <jeanlucperni@gmail.com>
 # license: GPL3
 # Rev (01) January 26 2015
+# Rev (02) Nov 21 2017
 #########################################################
 
 import sys
 import os
-import glob
-import shutil
-import shlex
+#import glob
+#import shutil
 import subprocess
 from subprocess import call, check_call
 from pysplc.str_utils import strings
