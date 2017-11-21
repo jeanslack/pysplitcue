@@ -1,108 +1,68 @@
-================================================================================ 
-A cue splitter audio files
-================================================================================ 
 
-Small and useful command line program for cue splitting audio files 
-when ripped on one track (with cue-file) to preserve fidelity to
-Original CompactDisk.
-This work with Wav, Flac and Ape audio formats and if need its enable 
-to decode / encode audio-tracks.
-Requires the presence of the * .cue file in the same directory music track
+Pysplitcue
+====
 
---------------------------------------------------------------------------------
+## Description
+A easy command line interface for shntool.
+Small and useful command line program for audio files cue splitting, 
+created for amnesic and daytime people.
+Work with Wav, Flac and Ape audio formats, requires the presence of 
+the '* .cue' file in the same musics tracks directory
 
-Copyright © 2010 - 2015 Gianluca Pernigotto 
+## License and Copyright
+
+Copyright © 2010 - 2017 Gianluca Pernigotto 
  
   Author and Developer: Gianluca Pernigotto 
   Mail: <jeanlucperni@gmail.com>
   License: GPL3 (see LICENSE file in the docs folder)
 
---------------------------------------------------------------------------------
+## Dependencies requires
 
-Dependencies requires:
+- python >=2.6 (no python 3)
+- cuebreakpoints (install cuetools)
+- cueconvert  (install cuetools)
+- cueprint  (install cuetools)
+- cuetag.sh  (install cuetools)
+- shnsplit (install shntool).
+- flac (free lossless audio codec)
+- monkeys-audio, libmac2, mac (monkey's audio lossless audio codec - binary)
+- wavpack
 
-	python >=2.6 (no python 3)
-	
-Dependencies recommended:
+## Use
 
-	flac
-	cuetools
-	shntool
-	mac or monkeys-audio
-	wavpack
-	
-Use
--------
+EXAMPLE: Unzip the sources tarball of pysplitcue, open a terminal window on its path-name 
+and type: `pysplitcue wav:flac '/dir/mydir/with my cue file and one track wav'`, this split 
+and convert a wav audio file in a flac format.
 
-- Unzip the sources tarball of pysplitcue
-- Open a terminal window in unzipped folder and type:
+**Splitting combinations:**
 
-		pysplitcue wav:flac '/dir/mydir/with my cue file and one track wav'
+for split wav to wav audio files, type option: `wav:wav` ; for split and convert wav to flac 
+audio files, type option: `wav:flac` ; for split and convert ape to flac audio files, type 
+option: `ape:flac` ; etc.
 
-this split and convert a wav audio file in a flac format.
-
-
-Splitting combinations:
-
-.wav to .wav
-
-		wav:wav
-
-.wav to .ape  
-
-		wav:ape
-
-.flac to .flac
-
-		flac:flac
-
-.ape to .flac
-
-		ape:flac
-
-.ape to .ape
-
-		ape:ape
-
-etc.
-
-Installation
--------
+## Installation
 
 pysplitcue not require installation, but if you are interested build an 
 installable package, see below:
 
-
---------------------------------------------------------------------------------
-
-DEBIAN:
-
---------------------------------------------------------------------------------
+**Debian:**
 
 Extra dependencies for build package with distutils:
-
-		# apt-get install python-all python-stdeb fakeroot
+`~# apt-get install python-all python-stdeb fakeroot`
 
 Enter in unzipped sources folder and type (with not root):
-
-		python setup.py --command-packages=stdeb.command bdist_deb
+`~$ python setup.py --command-packages=stdeb.command bdist_deb`
 
 This should create a python-pysplitcue_version_all.deb in the new deb_dist directory.
 
 see the setup.py script-file for more info on how-to build .deb package
 
---------------------------------------------------------------------------------
+**Slackware**
 
-SLACKWARE:
+Is available a SlackBuild script to build a package *.tgz* for Slackware and Slackware based 
+distributions. See here [pysplitcue.SlackBuild](https://github.com/jeanslack/slackbuilds/tree/master/pysplitcue)
 
---------------------------------------------------------------------------------
-
-Require pysetuptools at: [slackbuild.org](http://slackbuilds.org/repository/14.1/python/pysetuptools/)
-
-Then download the SlackBuild: [My-Repo-Slackware](https://github.com/jeanslack/My-Repo-Slackware/tree/master/slackware/multimedia/pysplitcue)
-
-
---------------------------------------------------------------------------------
-The installations includes a man page
---------------------------------------------------------------------------------
+Remember: first install **pysetuptools** before proceed to build Videomass, if not present.
+You can search on this site: [SlackBuild.org](http://slackbuilds.org/repository/14.1/python/pysetuptools/)
 

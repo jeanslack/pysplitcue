@@ -1,4 +1,15 @@
 +--------------------------------+
+Novembar 21 2017  Version 0.6.2
++--------------------------------+
+
+- Add a error management interface for shell output
+
+- Improved python code somewhere
+
+- Update the README.md
+
+
++--------------------------------+
 January 26 2015  Version 0.6.1
 +--------------------------------+
 
