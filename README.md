@@ -63,6 +63,6 @@ see the setup.py script-file for more info on how-to build .deb package
 Is available a SlackBuild script to build a package *.tgz* for Slackware and Slackware based 
 distributions. See here [pysplitcue.SlackBuild](https://github.com/jeanslack/slackbuilds/tree/master/pysplitcue)
 
-Remember: first install **pysetuptools** before proceed to build Videomass, if not present.
+Remember: install **pysetuptools** if not present first.
 You can search on this site: [SlackBuild.org](http://slackbuilds.org/repository/14.1/python/pysetuptools/)
 

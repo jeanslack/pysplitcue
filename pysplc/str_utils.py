@@ -69,25 +69,25 @@ EXAMPLES:
   short_help = u"""Usage: pysplitcue [OPTION] ['PATH NAME']
 Try: 'pysplitcue --help' for more information."""
 
-  license = (u"Copyright - %s %s\n"
-              "Author and Developer: %s\n"
-              "Mail: %s\n\n"
-              "Videomass is free software: you can redistribute\n"
-              "it and/or modify it under the terms of the GNU General\n"
-              "Public License as published by the Free Software\n"
-              "Foundation, either version 3 of the License, or (at your\n"
-              "option) any later version.\n\n"
+  license = u"""
+Copyright - %s %s
+Author and Developer: %s
+Mail: %s
 
-              "Videomass is distributed in the hope that it\n"
-              "will be useful, but WITHOUT ANY WARRANTY; without\n"
-              "even the implied warranty of MERCHANTABILITY or\n" 
-              "FITNESS FOR A PARTICULAR PURPOSE.\n" 
-              "See the GNU General Public License for more details.\n\n"
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License 3 as published by
+the Free Software Foundation; version .
 
-              "You should have received a copy of the GNU General\n" 
-              "Public License along with this program. If not, see\n" 
-              "http://www.gnu.org/licenses/" %(copyright,author,
-                                                author,mail))
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this package; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+""" % (copyright, author, author, mail)
+
   short_license = u"GPL3 (Gnu Public License)"
   
   return (author, mail, copyright, version, release, rls_name, prg_name, webpage, 
