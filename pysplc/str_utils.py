@@ -5,27 +5,33 @@
 #########################################################
 # Name: str_utils
 # Porpose: used string
-# Writer: Gianluca Pernigoto <jeanlucperni@gmail.com>
-# Copyright: (c) 2017 Gianluca Pernigoto <jeanlucperni@gmail.com>
+# Writer: jeanslack <jeanlucperni@gmail.com>
 # license: GPL3
 #########################################################
 
 
 def strings():
-
-  prg_name = "Pysplitcue"
-  version = "Version 0.6, released 25/08/2012)"
-  webpage = "https://github.com/jeanslack/pysplitcue"
-  blogspot = "http://itamburiditux.blogspot.it/search?q=pysplitcue"
-  short_decript = 'A easy command line interface for shntool.'
-  long_desript = """
-Small and useful command line program for audio files cue splitting, 
-created for amnesic and daytime people.
-Work with Wav, Flac and Ape audio formats, requires the presence of 
-the '* .cue' file in the same musics tracks directory.
+  """
+  All general info of the pysplitcue
+  """
+  
+  author = u"Gianluca Pernigotto - Jeanslack"
+  mail = u'<jeanlucperni@gmail.com>'
+  copyright = u'© 2013-2017'
+  version = u'v0.6.2'
+  release = u'Nov. 21 2017'
+  rls_name = u"Pysplitcue"
+  prg_name = u"pysplitcue"
+  webpage = u"https://github.com/jeanslack/pysplitcue"
+  blogspot = u"http://itamburiditux.blogspot.it/search?q=pysplitcue"
+  short_decript = u'A easy front-end command line interface for **Shntool** and **Cuetools**.'
+  long_desript = u"""
+Small command line utility for audio files cue splitting, created for amnesic 
+and daytime people. Work with Wav, Flac and Ape audio formats, requires the 
+presence of the '*.cue' file in the same musics tracks directory.
 """
 
-  long_help = """%s: %s
+  long_help = u"""%s: %s
 Webpage: <%s>
 Blogspot: <%s>
 
@@ -54,14 +60,38 @@ OTHER OPTIONS:
     -h, --help            Print this help and exit
     -v, --version         Print the program version and date
 
-
 EXAMPLES:
     pysplitcue flac:wav
     pysplitcue wav:flac /path/name/
-    pysplitcue ape:wav '/path name/My directory/'""" % (prg_name, version,
-                                                        webpage,blogspot)
+    pysplitcue ape:wav '/path name/My directory/'
+    """ % (prg_name, version, webpage, blogspot)
 
-  short_help = """Usage: pysplitcue [OPTION] ['PATH NAME']
+  short_help = u"""Usage: pysplitcue [OPTION] ['PATH NAME']
 Try: 'pysplitcue --help' for more information."""
+
+  license = (u"Copyright - %s %s\n"
+              "Author and Developer: %s\n"
+              "Mail: %s\n\n"
+              "Videomass is free software: you can redistribute\n"
+              "it and/or modify it under the terms of the GNU General\n"
+              "Public License as published by the Free Software\n"
+              "Foundation, either version 3 of the License, or (at your\n"
+              "option) any later version.\n\n"
+
+              "Videomass is distributed in the hope that it\n"
+              "will be useful, but WITHOUT ANY WARRANTY; without\n"
+              "even the implied warranty of MERCHANTABILITY or\n" 
+              "FITNESS FOR A PARTICULAR PURPOSE.\n" 
+              "See the GNU General Public License for more details.\n\n"
+
+              "You should have received a copy of the GNU General\n" 
+              "Public License along with this program. If not, see\n" 
+              "http://www.gnu.org/licenses/" %(copyright,author,
+                                                author,mail))
+  short_license = u"GPL3 (Gnu Public License)"
   
-  return (prg_name, version, webpage, blogspot, long_help, short_help)
+  return (author, mail, copyright, version, release, rls_name, prg_name, webpage, 
+          blogspot, short_decript, long_desript, long_help, short_help, license,
+          short_license)
+
+

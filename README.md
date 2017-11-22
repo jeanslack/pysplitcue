@@ -3,37 +3,37 @@ Pysplitcue
 ====
 
 ## Description
-A easy command line interface for shntool.
-Small and useful command line program for audio files cue splitting, 
-created for amnesic and daytime people.
-Work with Wav, Flac and Ape audio formats, requires the presence of 
-the '* .cue' file in the same musics tracks directory
+
+A easy front-end command line interface for **Shntool** and **Cuetools**.
+Small command line program for audio files cue splitting, created for amnesic 
+and daytime people. Work with Wav, Flac and Ape audio formats, requires the 
+presence of the '* .cue' file in the same musics tracks directory.
 
 ## License and Copyright
 
-Copyright © 2010 - 2017 Gianluca Pernigotto 
- 
-  Author and Developer: Gianluca Pernigotto 
-  Mail: <jeanlucperni@gmail.com>
-  License: GPL3 (see LICENSE file in the docs folder)
+Copyright © 2010 - 2017 Gianluca Pernigotto   
+Author and Developer: Gianluca Pernigotto   
+Mail: <jeanlucperni@gmail.com>   
+License: GPL3 (see LICENSE file in the docs folder)
 
 ## Dependencies requires
 
 - python >=2.6 (no python 3)
-- cuebreakpoints (install cuetools)
+- cuebreakpoints(install cuetools)
 - cueconvert  (install cuetools)
-- cueprint  (install cuetools)
+- cueprint (install cuetools)
 - cuetag.sh  (install cuetools)
 - shnsplit (install shntool).
-- flac (free lossless audio codec)
-- monkeys-audio, libmac2, mac (monkey's audio lossless audio codec - binary)
+- flac
+- monkey's-audio (I've seen it has different names, this depends on the
+                  your O.S. - try search: libmac2, mac binaries)
 - wavpack
 
 ## Use
 
-EXAMPLE: Unzip the sources tarball of pysplitcue, open a terminal window on its path-name 
+**Example:** Unzip the sources tarball of pysplitcue, open a terminal window on its path-name 
 and type: `pysplitcue wav:flac '/dir/mydir/with my cue file and one track wav'`, this split 
-and convert a wav audio file in a flac format.
+and convert a wav audio file in a flac format. Make sure you have the *.cue* file first.
 
 **Splitting combinations:**
 

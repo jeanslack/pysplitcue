@@ -1,11 +1,13 @@
+
 - There is not a control interface for error, when not exist the shntool
-  !exit with done msg, but is error!
-  make this soon +++ :-]
+  exit with done msg, but is error!
+  make this soon :-] [RESOLVED]
   
  - Include this file into packages (setup.py and also see the pysplitcue.slackbuild)
  
- - adjust the setup.py file and add 'pysplc' folder with python module
+ - adjust the setup.py file and add 'pysplc' folder with python module [RESOLVED]
+     
  
  - the cuetag bin on Debian is 'cuetag' but in slackware is 'cuetag.sh'.
    And in others distro? Maybe it need make an systematic checking and
-   put the result in variable?
+   put the result in variable? [RESOLVED]

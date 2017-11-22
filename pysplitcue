@@ -5,9 +5,9 @@
 # 
 #########################################################
 # Name: pysplitcue
-# Porpose: script for cut audio file with cue file
+# Porpose: main 
 # Platform: Mac OsX, Gnu/Linux
-# Writer: Gianluca Pernigoto <jeanlucperni@gmail.com>
+# Writer: jeanslack <jeanlucperni@gmail.com>
 # license: GPL3
 # Rev (01) January 26 2015
 # Rev (02) Nov 21 2017
@@ -20,16 +20,14 @@ import os
 import subprocess
 from subprocess import call, check_call
 from pysplc.str_utils import strings
+import platform
 
-prg_name = strings()[0]
-version = strings()[1]
-webpage = strings()[2]
-blogspot = strings()[3]
-long_help = strings()[4]
-short_help = strings()[5]
+dist_name = platform.linux_distribution()[0]
+dist_vers = platform.linux_distribution()[1]
 
-diz = {'wav:wav':'shnsplit -o wav -f *.cue -t "%n - %t.split" *.wav',
-'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav && cuetag.sh *.cue *.flac',
+diz = {
+'wav:wav':'shnsplit -o wav -f *.cue -t "%n - %t.split" *.wav',
+'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav && cuetag *.cue *.flac',
 'wav:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.wav',
 'flac:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.flac',
 'flac:flac':'shnsplit -o flac -f *.cue -t "%n - %t.split" *.flac && cuetag *.cue *.split.flac',
@@ -38,13 +36,34 @@ diz = {'wav:wav':'shnsplit -o wav -f *.cue -t "%n - %t.split" *.wav',
 'ape:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.ape && cuetag *.cue *.flac',
 'ape:ape':'shnsplit -o ape -f *.cue -t "%n - %t.split" *.ape'}
 
-print "\033[1m%s %s\033[0m" % (prg_name, version)
+if dist_name == 'Slackware ':
+  if dist_vers == '14.2':# in this version cuetag bin is cuetag.sh :-(
+    diz = {
+'wav:wav':'shnsplit -o wav -f *.cue -t "%n - %t.split" *.wav',
+'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav && cuetag.sh *.cue *.flac',
+'wav:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.wav',
+'flac:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.flac',
+'flac:flac':'shnsplit -o flac -f *.cue -t "%n - %t.split" *.flac && cuetag.sh *.cue *.split.flac',
+'flac:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.flac',
+'ape:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.ape',
+'ape:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.ape && cuetag.sh *.cue *.flac',
+'ape:ape':'shnsplit -o ape -f *.cue -t "%n - %t.split" *.ape'}
+  
+cr = strings()
+prg_name = cr[6]
+version = cr[3]
+release = cr[4]
+webpage = cr[7]
+blogspot = cr[8]
+long_help = cr[11]
+short_help = cr[12]
+
+print "\033[1m%s %s - %s\033[0m" % (prg_name, version, release)
 
 ################################################################
 def positional_parameter():
   """
-  valuta gli argomenti (parametri posizionali) passati dopo
-  il nome del programma
+  values the inputs of users (positional parameters)
   """
   if len(sys.argv) == 1: #err
     sys.exit("pysplitcue: missing option\n%s" % (short_help))
@@ -53,7 +72,7 @@ def positional_parameter():
     if len(sys.argv) == 3:
       sys.exit("unexpected operation '%s'\nTry: 'pysplitcue --help'" % (
                                                           sys.argv[2]))
-    print version
+    print '%s - %s' % (version, release)
     return
       
   elif sys.argv[1] == "--help" or sys.argv[1] == "-h": 
@@ -63,7 +82,6 @@ def positional_parameter():
     print long_help
     return
   
-  #elif sys.argv[1] in opt: # only option
   elif diz.has_key(sys.argv[1]):
     if len(sys.argv) == 2:
       option_arg = sys.argv[1]
@@ -110,7 +128,7 @@ def run_process(option_arg):
     print "\033[1m...done.\033[0m"
       
   except subprocess.CalledProcessError:
-    sys.exit("\033[31;1mERROR:\033[0m check dependencies please [shntool, flac, monkey's audio codec, wavpack]")
+    sys.exit("\033[31;1mERROR:\033[0m")
     
 positional_parameter()
 
