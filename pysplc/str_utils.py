@@ -18,8 +18,8 @@ def strings():
   author = u"Gianluca Pernigotto - Jeanslack"
   mail = u'<jeanlucperni@gmail.com>'
   copyright = u'© 2013-2017'
-  version = u'v0.6.2'
-  release = u'Nov. 21 2017'
+  version = u'v0.6.3'
+  release = u'Nov. 24 2017'
   rls_name = u"Pysplitcue"
   prg_name = u"pysplitcue"
   webpage = u"https://github.com/jeanslack/pysplitcue"
@@ -66,8 +66,9 @@ EXAMPLES:
     pysplitcue ape:wav '/path name/My directory/'
     """ % (prg_name, version, webpage, blogspot)
 
-  short_help = u"""Usage: pysplitcue [OPTION] ['PATH NAME']
-Try: 'pysplitcue --help' for more information."""
+  short_help = u"Usage: pysplitcue [OPTION] ['PATH NAME']"
+  
+  try_help = u"Try: 'pysplitcue --help' for more information."
 
   license = u"""
 Copyright - %s %s
@@ -92,6 +93,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
   
   return (author, mail, copyright, version, release, rls_name, prg_name, webpage, 
           blogspot, short_decript, long_desript, long_help, short_help, license,
-          short_license)
+          short_license, try_help)
 
 

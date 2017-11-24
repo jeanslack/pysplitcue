@@ -5,12 +5,12 @@
 # 
 #########################################################
 # Name: pysplitcue
-# Porpose: main 
+# Porpose: wraps the shnsplit and cuetag commands
 # Platform: Mac OsX, Gnu/Linux
 # Writer: jeanslack <jeanlucperni@gmail.com>
 # license: GPL3
 # Rev (01) January 26 2015
-# Rev (02) Nov 21 2017
+# Rev (02) Nov 21 2017, Rev (03) Nov 24 2017
 #########################################################
 
 import sys
@@ -25,29 +25,39 @@ import platform
 dist_name = platform.linux_distribution()[0]
 dist_vers = platform.linux_distribution()[1]
 
-diz = {
+split_dict = {
 'wav:wav':'shnsplit -o wav -f *.cue -t "%n - %t.split" *.wav',
-'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav && cuetag *.cue *.flac',
+'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav',
 'wav:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.wav',
 'flac:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.flac',
-'flac:flac':'shnsplit -o flac -f *.cue -t "%n - %t.split" *.flac && cuetag *.cue *.split.flac',
+'flac:flac':'shnsplit -o flac -f *.cue -t "%n - %t.split" *.flac',
 'flac:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.flac',
 'ape:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.ape',
-'ape:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.ape && cuetag *.cue *.flac',
+'ape:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.ape',
 'ape:ape':'shnsplit -o ape -f *.cue -t "%n - %t.split" *.ape'}
+
+tag_dict = {'wav:flac':'cuetag *.cue *.flac', 
+            'flac:flac':'cuetag *.cue *.split.flac', 
+            'ape:flac':'cuetag *.cue *.flac'
+            }
 
 if dist_name == 'Slackware ':
   if dist_vers == '14.2':# in this version cuetag bin is cuetag.sh :-(
-    diz = {
+    split_dict = {
 'wav:wav':'shnsplit -o wav -f *.cue -t "%n - %t.split" *.wav',
-'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav && cuetag.sh *.cue *.flac',
+'wav:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.wav',
 'wav:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.wav',
 'flac:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.flac',
-'flac:flac':'shnsplit -o flac -f *.cue -t "%n - %t.split" *.flac && cuetag.sh *.cue *.split.flac',
+'flac:flac':'shnsplit -o flac -f *.cue -t "%n - %t.split" *.flac',
 'flac:ape':'shnsplit -o ape -f *.cue -t "%n - %t" *.flac',
 'ape:wav':'shnsplit -o wav -f *.cue -t "%n - %t" *.ape',
-'ape:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.ape && cuetag.sh *.cue *.flac',
+'ape:flac':'shnsplit -o flac -f *.cue -t "%n - %t" *.ape',
 'ape:ape':'shnsplit -o ape -f *.cue -t "%n - %t.split" *.ape'}
+    
+    tag_dict = {'wav:flac':'cuetag.sh *.cue *.flac', 
+                'flac:flac':'cuetag.sh *.cue *.split.flac', 
+                'ape:flac':'cuetag.sh *.cue *.flac'
+                }
   
 cr = strings()
 prg_name = cr[6]
@@ -57,6 +67,7 @@ webpage = cr[7]
 blogspot = cr[8]
 long_help = cr[11]
 short_help = cr[12]
+try_help = cr[15]
 
 print "\033[1m%s %s - %s\033[0m" % (prg_name, version, release)
 
@@ -66,23 +77,25 @@ def positional_parameter():
   values the inputs of users (positional parameters)
   """
   if len(sys.argv) == 1: #err
-    sys.exit("pysplitcue: missing option\n%s" % (short_help))
+    sys.exit("\033[31;1mMessage Error!\033[0m missing option\n%s" % (
+                                                         short_help))
     
   if sys.argv[1] == "--version" or sys.argv[1] == "-v":
     if len(sys.argv) == 3:
-      sys.exit("unexpected operation '%s'\nTry: 'pysplitcue --help'" % (
-                                                          sys.argv[2]))
+      sys.exit("\033[31;1mMessage Warning!\033[0m unexpected operand:" 
+                                  "'%s'\n%s" % (sys.argv[2],try_help))
     print '%s - %s' % (version, release)
     return
       
   elif sys.argv[1] == "--help" or sys.argv[1] == "-h": 
     if len(sys.argv) == 3:
-      sys.exit("unexpected operation '%s'\nTry: 'pysplitcue --help'" % (
-                                                           sys.argv[2]))
+      sys.exit("\033[31;1mMessage Warning!\033[0m unexpected operand:"
+                                   "'%s'\n%s" % (sys.argv[2],try_help))
     print long_help
     return
   
-  elif diz.has_key(sys.argv[1]):
+  elif split_dict.has_key(sys.argv[1]):
+    
     if len(sys.argv) == 2:
       option_arg = sys.argv[1]
       run_process(option_arg)
@@ -93,10 +106,12 @@ def positional_parameter():
         os.chdir(sys.argv[2])
         run_process(option_arg)
       except OSError:
-        sys.exit("pysplitcue: error: non-existent path: %s" % (sys.argv[2]))
+        sys.exit("\033[31;1mMessage Error!\033[0m non-existent path: '%s'" % (
+                                                                 sys.argv[2]))
         
   else: #err
-    sys.exit("Invalid option '%s'\nTry: 'pysplitcue --help'" % (sys.argv[1]))
+    sys.exit("\033[31;1mMessage Error!\033[0m Invalid option '%s'\n%s" % (
+                                                    sys.argv[1],try_help))
     
 ################################################################
 #def makedir_move(ext,name_dir):
@@ -119,16 +134,25 @@ def run_process(option_arg):
   start splitting process and conversion, there is a small error 
   management, which can be improved
   """
-  
-  command = diz [option_arg]
   try:
-    print command
+    command = split_dict [option_arg]
     check_call(command, shell = True)
     #makedir_move(".split.wav","Formato-wav")
     print "\033[1m...done.\033[0m"
       
-  except subprocess.CalledProcessError:
-    sys.exit("\033[31;1mERROR:\033[0m")
+  except subprocess.CalledProcessError as err:
+    sys.exit("\033[31;1mMessage Error!\033[0m %s" % (err))
+    
+  if tag_dict.has_key(sys.argv[1]):
+    print "\nApply tags on audio tracks...\n"
+    try:
+      command = tag_dict [option_arg]
+      check_call(command, shell = True)
+      #makedir_move(".split.wav","Formato-wav")
+      print "\033[1m...done.\033[0m"
+      
+    except subprocess.CalledProcessError as err:
+      sys.exit("\033[31;1mMessage Error!\033[0m %s" % (err))
     
 positional_parameter()
 

@@ -1,4 +1,14 @@
 +--------------------------------+
+Novembar 24 2017  Version 0.6.3
++--------------------------------+
+
+- Improved error management, now it's a little better commented
+
+- I have separated the splitting process and the tagging process
+  for improve errors management
+
+
++--------------------------------+
 Novembar 21 2017  Version 0.6.2
 +--------------------------------+
 
