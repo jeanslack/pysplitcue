@@ -14,7 +14,6 @@ def strings():
   """
   All general info of the pysplitcue
   """
-  
   author = u"Gianluca Pernigotto - Jeanslack"
   mail = u'<jeanlucperni@gmail.com>'
   copyright = u'© 2013-2017'
@@ -24,11 +23,12 @@ def strings():
   prg_name = u"pysplitcue"
   webpage = u"https://github.com/jeanslack/pysplitcue"
   blogspot = u"http://itamburiditux.blogspot.it/search?q=pysplitcue"
-  short_decript = u'A easy front-end command line interface for **Shntool** and **Cuetools**.'
+  short_decript = u'A stupid wrapper interface for **Shntool** and **Cuetools** libraries.'
   long_desript = u"""
-Small command line utility for audio files cue splitting, created for amnesic 
-and daytime people. Work with Wav, Flac and Ape audio formats, requires the 
-presence of the '*.cue' file in the same musics tracks directory.
+Audio files cue splitting utilities, created for amnesic and daytime 
+people. Work with Wav, Flac and Ape audio formats, requires the presence 
+of the cue sheet metadata ( *.cue* filename extension) in the same musics 
+tracks directory.
 """
 
   long_help = u"""%s: %s

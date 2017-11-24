@@ -4,10 +4,11 @@ Pysplitcue
 
 ## Description
 
-A easy front-end command line interface for **Shntool** and **Cuetools**.
-Small command line program for audio files cue splitting, created for amnesic 
-and daytime people. Work with Wav, Flac and Ape audio formats, requires the 
-presence of the '* .cue' file in the same musics tracks directory.
+A stupid wrapper interface for **Shntool** and **Cuetools** libraries.
+Audio files cue splitting utilities, created for amnesic and daytime 
+people. Work with Wav, Flac and Ape audio formats, requires the presence 
+of the cue sheet metadata ( *.cue* filename extension) in the same musics 
+tracks directory.
 
 ## License and Copyright
 
