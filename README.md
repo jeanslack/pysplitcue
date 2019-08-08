@@ -1,7 +1,7 @@
-## Splitting utilities for big audio tracks with CUE sheet.
+# Pysplitcue - Splitting utilities for big audio tracks with CUE sheet.
 
 It is a stupid wrapper interface for **Shntool** and **Cuetools** libraries.
-It split big audio tracks with CUE sheet and support Wav, Flac and Ape audio 
+Split big audio tracks with CUE sheet and support Wav, Flac and Ape audio 
 formats and automatic tag. 
 Requires a  *.cue* sheet to read audio metadata to splitting and tagging.
 
