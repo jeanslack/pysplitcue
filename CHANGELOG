@@ -1,4 +1,14 @@
 +--------------------------------+
+August 8 2019  Version 1.0.0
++--------------------------------+
+
+- Support guaranteed only on Python3
+- Add checking dependencies
+- Add argparser integrity
+- Checking the input file for determine supported audio 
+  formats and cue sheet presence.
+  
++--------------------------------+
 Novembar 24 2017  Version 0.6.3
 +--------------------------------+
 

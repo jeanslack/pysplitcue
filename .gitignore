@@ -4,6 +4,8 @@ dist
 build
 deb_dist
 *.egg-info
+Pipfile
+Pipfile.lock
 *.DS_Store
 *.directory
 *~

@@ -1,69 +1,46 @@
+## Splitting utilities for big audio tracks with CUE sheet.
 
-Pysplitcue
-====
+It is a stupid wrapper interface for **Shntool** and **Cuetools** libraries.
+It split big audio tracks with CUE sheet and support Wav, Flac and Ape audio 
+formats and automatic tag. 
+Requires a  *.cue* sheet to read audio metadata to splitting and tagging.
 
-## Description
+## Dependencies requires
 
-A stupid wrapper interface for **Shntool** and **Cuetools** libraries.
-Audio files cue splitting utilities, created for amnesic and daytime 
-people. Work with Wav, Flac and Ape audio formats, requires the presence 
-of the cue sheet metadata ( *.cue* filename extension) in the same musics 
-tracks directory.
+- python >=3
+- cuetools (includes: cuebreakpoints, cueconvert, cueprint, cuetag)
+- shntool (includes: shnsplit)
+- flac
+- mac (monkey's-audio, name depends to your O.S., try search: libmac2, mac)
+- wavpack
+
+## Usage
+
+usage: pysplitcue [-h] [-v] [-c] [-o {wav,flac,ape}] [-i FILE]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -v, --version      show the current version and exit
+  -c, --check        list of installed or missing dependencies
+  -o {wav,flac,ape}  output audio format
+  -i FILE            input audio filename to splitting
+
+## Example
+
+`pysplitcue -o flac -i file.wav`   
+
+To splitting and conversion from wav audio format to flac audio format with
+automatic tagging.
+
+## Installation
+
+`pip install pysplitcue`
 
 ## License and Copyright
 
-Copyright © 2010 - 2017 Gianluca Pernigotto   
+Copyright © 2010 - 2019 Gianluca Pernigotto   
 Author and Developer: Gianluca Pernigotto   
 Mail: <jeanlucperni@gmail.com>   
 License: GPL3 (see LICENSE file in the docs folder)
 
-## Dependencies requires
-
-- python >=2.6 (no python 3)
-- cuebreakpoints(install cuetools)
-- cueconvert  (install cuetools)
-- cueprint (install cuetools)
-- cuetag.sh  (install cuetools)
-- shnsplit (install shntool).
-- flac
-- monkey's-audio (I've seen it has different names, this depends on the
-                  your O.S. - try search: libmac2, mac binaries)
-- wavpack
-
-## Use
-
-**Example:** Unzip the sources tarball of pysplitcue, open a terminal window on its path-name 
-and type: `pysplitcue wav:flac '/dir/mydir/with my cue file and one track wav'`, this split 
-and convert a wav audio file in a flac format. Make sure you have the *.cue* file first.
-
-**Splitting combinations:**
-
-for split wav to wav audio files, type option: `wav:wav` ; for split and convert wav to flac 
-audio files, type option: `wav:flac` ; for split and convert ape to flac audio files, type 
-option: `ape:flac` ; etc.
-
-## Installation
-
-pysplitcue not require installation, but if you are interested build an 
-installable package, see below:
-
-**Debian:**
-
-Extra dependencies for build package with distutils:
-`~# apt-get install python-all python-stdeb fakeroot`
-
-Enter in unzipped sources folder and type (with not root):
-`~$ python setup.py --command-packages=stdeb.command bdist_deb`
-
-This should create a python-pysplitcue_version_all.deb in the new deb_dist directory.
-
-see the setup.py script-file for more info on how-to build .deb package
-
-**Slackware**
-
-Is available a SlackBuild script to build a package *.tgz* for Slackware and Slackware based 
-distributions. See here [pysplitcue.SlackBuild](https://github.com/jeanslack/slackbuilds/tree/master/pysplitcue)
-
-Remember: install **pysetuptools** if not present first.
-You can search on this site: [SlackBuild.org](http://slackbuilds.org/repository/14.1/python/pysetuptools/)
 
