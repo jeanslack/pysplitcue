@@ -7,23 +7,24 @@ Requires a  *.cue* sheet to read audio metadata to splitting and tagging.
 
 ## Dependencies requires
 
-- python >=3
-- cuetools (includes: cuebreakpoints, cueconvert, cueprint, cuetag)
-- shntool (includes: shnsplit)
+- Python >=3
+- cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
+- shntool *(includes: shnsplit)*
 - flac
-- mac (monkey's-audio, name depends to your O.S., try search: libmac2, mac)
+- mac *(monkey's-audio, name depends to your O.S., try search: libmac2, mac)*
 - wavpack
 
 ## Usage
 
-usage: pysplitcue [-h] [-v] [-c] [-o {wav,flac,ape}] [-i FILE]
+usage: `pysplitcue [-h] [-v] [-c] [-o {wav,flac,ape}] [-i FILE]`   
 
-optional arguments:
-  -h, --help         show this help message and exit
-  -v, --version      show the current version and exit
-  -c, --check        list of installed or missing dependencies
-  -o {wav,flac,ape}  output audio format
-  -i FILE            input audio filename to splitting
+optional arguments:   
+
+  `-h, --help`         show this help message and exit   
+  `-v, --version`      show the current version and exit   
+  `-c, --check`        list of installed or missing dependencies   
+  `-o {wav,flac,ape}`  output audio format   
+  `-i FILE`            input audio filename to splitting   
 
 ## Example
 
