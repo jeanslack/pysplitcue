@@ -49,13 +49,22 @@ def dependencies():
     
     """
     listing = ['flac', 'mac', 'wavpack', 'shntool', 'cuebreakpoints', 
-               'cueconvert', 'cueprint', 'cuetag']
+               'cueconvert', 'cueprint']
     for required in  listing:
         #if which(required):
         if which(required, mode=os.F_OK | os.X_OK, path=None):
+                
             print ("Check for: '%s' ..Ok" % required)
         else:
             print ("Check for: '%s' ..Not Installed" % required)
+    
+    if which('cuetag', mode=os.F_OK | os.X_OK, path=None):
+        print ("Check for: 'cuetag' ..Ok")
+        
+    elif which('cuetag.sh', mode=os.F_OK | os.X_OK, path=None):
+        print ("Check for: 'cuetag.sh' ..Ok")
+    else:
+        print ("Check for: 'cuetag' ..Not Installed")
             
 #----------------------------------------------------------#
 def run_process(in_ext, out_ext, name):
@@ -68,7 +77,7 @@ def run_process(in_ext, out_ext, name):
     split_dict = {'wav:wav':
             f'shnsplit -o wav -f {name}.cue -t "%n - %t.split" {name}.wav',
                   'wav:flac':
-            f"shnsplit -o flac -f {name}.cue -t '%n - %t' {name}.wav",
+            f'shnsplit -o flac -f {name}.cue -t "%n - %t" {name}.wav',
                   'wav:ape':
             f'shnsplit -o ape -f {name}.cue -t "%n - %t" {name}.wav',
                   'flac:wav':
