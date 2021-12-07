@@ -8,8 +8,23 @@ Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
 Rev: January 26 2015, Nov 21 2017, Nov 24 2017, Aug 8 2018, Dec 06 2021
 Code checker: flake8 and pylint
-"""
+####################################################################
 
+This file is part of pysplitcue.
+
+    pysplitcue is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    pysplitcue is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with pysplitcue.  If not, see <http://www.gnu.org/licenses/>.
+"""
 import sys
 import os
 from shutil import which
@@ -19,14 +34,7 @@ from pysplc.str_utils import strings
 
 # strings of information
 cr = strings()
-PRG_NAME = cr[6]
-VERSION = cr[3]
-RELEASE = cr[4]
-WEBPAGE = cr[7]
-BLOGSPOT = cr[8]
-LONG_HELP = cr[11]
-SHORT_HELP = cr[12]
-TRY_HELP = cr[15]
+DATA = cr[0]
 
 
 def check_essentials():
@@ -36,11 +44,12 @@ def check_essentials():
     elif which('cuetag.sh'):
         cuetag = which('cuetag')
     else:
-        sys.stderr.write("pysplitcue:ERROR: cuetag is required, "
+        sys.stderr.write("pysplitcue: ERROR: cuetag is required, "
                          "please install 'cuetools'.\n")
         sys.exit(1)
+
     if not which('shntool'):
-        sys.stderr.write("pysplitcue:ERROR: 'shntool' is required, "
+        sys.stderr.write("pysplitcue: ERROR: 'shntool' is required, "
                          "please install it.\n")
         sys.exit(1)
 
@@ -82,48 +91,46 @@ def run_process(in_ext, out_ext, name):
     in_ext = in_ext.replace('.', '', 1)
     name = os.path.splitext(name)[0]
 
-    split_dict = {'wav:wav': (f'shnsplit -o wav -f "{name}.cue" '
-                              f'-t "%n - %t.split" "{name}.wav"'),
-                  'wav:flac': (f'shnsplit -o flac -f "{name}.cue" '
-                               f'-t "%n - %t" "{name}.wav"'),
-                  'wav:ape': (f'shnsplit -o ape -f "{name}.cue" '
+    cmd_split = {'wav:wav': (f'shnsplit -o wav -f "{name}.cue" '
+                             f'-t "%n - %t.split" "{name}.wav"'),
+                 'wav:flac': (f'shnsplit -o flac -f "{name}.cue" '
                               f'-t "%n - %t" "{name}.wav"'),
-                  'flac:wav': (f'shnsplit -o wav -f "{name}.cue" '
+                 'wav:ape': (f'shnsplit -o ape -f "{name}.cue" '
+                             f'-t "%n - %t" "{name}.wav"'),
+                 'flac:wav': (f'shnsplit -o wav -f "{name}.cue" '
+                              f'-t "%n - %t" "{name}.flac"'),
+                 'flac:flac': (f'shnsplit -o flac -f "{name}.cue" '
                                f'-t "%n - %t" "{name}.flac"'),
-                  'flac:flac': (f'shnsplit -o flac -f "{name}.cue" '
-                                f'-t "%n - %t" "{name}.flac"'),
-                  'flac:ape': (f'shnsplit -o ape -f "{name}.cue" '
-                               f'-t "%n - %t" "{name}.flac"'),
-                  'ape:wav': (f'shnsplit -o wav -f "{name}.cue" '
+                 'flac:ape': (f'shnsplit -o ape -f "{name}.cue" '
+                              f'-t "%n - %t" "{name}.flac"'),
+                 'ape:wav': (f'shnsplit -o wav -f "{name}.cue" '
+                             f'-t "%n - %t" "{name}.ape"'),
+                 'ape:flac': (f'shnsplit -o flac -f "{name}.cue" '
                               f'-t "%n - %t" "{name}.ape"'),
-                  'ape:flac': (f'shnsplit -o flac -f "{name}.cue" '
-                               f'-t "%n - %t" "{name}.ape"'),
-                  'ape:ape': (f'shnsplit -o ape -f "{name}.cue" '
-                              f'-t "%n - %t.split" "{name}.ape"')
-                  }
+                 'ape:ape': (f'shnsplit -o ape -f "{name}.cue" '
+                             f'-t "%n - %t.split" "{name}.ape"')
+                 }
 
-    tag_dict = {'wav:flac': f'{cuetag} "{name}.cue" *.flac',
-                'flac:flac': f'{cuetag} "{name}.cue" *.flac',
-                'ape:flac': f'{cuetag} "{name}.cue" *.flac'
-                }
-
-    if f'{in_ext}:{out_ext}' in split_dict:
-        # print(split_dict[f'{in_ext}:{out_ext}'])#print command for debug
+    if f'{in_ext}:{out_ext}' in cmd_split:
+        # print(cmd_split[f'{in_ext}:{out_ext}'])#print command for debug
+        split = cmd_split[f'{in_ext}:{out_ext}']
         try:
-            command = split_dict[f'{in_ext}:{out_ext}']
-            subprocess.check_call(command, shell=True)
-            # makedir_move(".split.wav","Formato-wav")
+            subprocess.check_call(split, shell=True)
             print("\033[1m...done.\033[0m")
 
         except subprocess.CalledProcessError as err:
             sys.exit(f"\033[31;1mProcess Error!\033[0m {err}")
 
-        if f'{in_ext}:{out_ext}' in tag_dict:
+        cmd_tag = {'wav:flac': f'{cuetag} "{name}.cue" *.flac',
+                   'flac:flac': f'{cuetag} "{name}.cue" *.flac',
+                   'ape:flac': f'{cuetag} "{name}.cue" *.flac'
+                   }
+
+        if f'{in_ext}:{out_ext}' in cmd_tag:
             print("\nApply tags on audio tracks...\n")
             try:
-                command = tag_dict[f'{in_ext}:{out_ext}']
-                subprocess.check_call(command, shell=True)
-                # makedir_move(".split.wav","Formato-wav")
+                tag = cmd_tag[f'{in_ext}:{out_ext}']
+                subprocess.check_call(tag, shell=True)
                 print("\033[1m...done.\033[0m")
 
             except subprocess.CalledProcessError as err:
@@ -165,10 +172,10 @@ def checker(out_ext, filename):
 
 def main():
     """
-    Parser of the users inputs (positional/optional arguments)
+    Parser of the users inputs (evaluates positional arguments)
     """
     parser = argparse.ArgumentParser(
-                description='Audio files cue splitting utility',)
+                description=DATA['short_decript'],)
     parser.add_argument(
                 '-v', '--version',
                 help="show the current version and exit",
@@ -205,7 +212,7 @@ def main():
             sys.exit('pysplitcue: error: missing option -i ..FILE')
         checker(args.o, args.i)
     elif args.version:
-        print(f'{VERSION} - {RELEASE}')
+        print(f"pysplitcue v{DATA['version']} - {DATA['release']}")
         return
     else:
         print("Type 'pysplitcue -h' for help.")
