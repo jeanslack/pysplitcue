@@ -1,11 +1,23 @@
 #Files mentioned in this file will be ignored by git
 *.pyc
+*.eggs
+*.log
+*.mbtree
 dist
 build
+pysplitcue.egg-info
 deb_dist
+pysplitcue.spec
+Pysplitcue.spec
+*.tar.gz
+ENV
+env
+*.spec
+*.AppImage
 *.egg-info
 Pipfile
 Pipfile.lock
 *.DS_Store
 *.directory
+*.kate-swp
 *~

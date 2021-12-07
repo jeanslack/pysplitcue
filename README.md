@@ -1,13 +1,14 @@
-# Pysplitcue - Splitting utilities for big audio tracks with CUE sheet.
+# Pysplitcue - Splitting utilities for big audio tracks supplied with CUE sheet.
 
-It is a stupid wrapper interface for **Shntool** and **Cuetools** libraries.
-Split big audio tracks with CUE sheet and support Wav, Flac and Ape audio 
-formats and automatic tag. 
-Requires a  *.cue* sheet to read audio metadata to splitting and tagging.
+Pysplitcue is a stupid wrapper for the **shntool** and **cuetools** libraries. 
+It splits big audio tracks using informations contained in the associated **"CUE"** 
+file. It supports Wav, Flac and Ape audio formats and auto tag. 
+Requires related **'*.cue'** sheet file to read audio metadata and execute commands 
+for splitting and tagging.
 
 ## Dependencies requires
 
-- Python >=3
+- Python >=3.6
 - cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
 - shntool *(includes: shnsplit)*
 - flac
@@ -30,16 +31,16 @@ optional arguments:
 
 `pysplitcue -o flac -i file.wav`   
 
-To splitting and conversion from wav audio format to flac audio format with
-automatic tagging.
+To split and convert wav audio format into the relative individual auto-tagged 
+flac format audio tracks.
 
 ## Installation
 
-`pip install pysplitcue`
+`python3 -m pip install pysplitcue`
 
 ## License and Copyright
 
-Copyright © 2010 - 2019 Gianluca Pernigotto   
+Copyright © 2010 - 2021 Gianluca Pernigotto   
 Author and Developer: Gianluca Pernigotto   
 Mail: <jeanlucperni@gmail.com>   
 License: GPL3 (see LICENSE file in the docs folder)

@@ -1,13 +1,23 @@
 +--------------------------------+
+December 07 2021  Version 2.0.0
++--------------------------------+
+
+- Fixed missing quotes in the filenames #2
+- Some code refactoring.
+- Improved description and examples
+- Improved man page
+- Fixed setup.py
+
++--------------------------------+
 August 8 2019  Version 1.0.0
 +--------------------------------+
 
 - Support guaranteed only on Python3
 - Add checking dependencies
 - Add argparser integrity
-- Checking the input file for determine supported audio 
+- Checking the input file for determine supported audio
   formats and cue sheet presence.
-  
+
 +--------------------------------+
 Novembar 24 2017  Version 0.6.3
 +--------------------------------+
@@ -35,11 +45,11 @@ January 26 2015  Version 0.6.1
 
 - This is first stable release
 
-- Translation done completely in English 
+- Translation done completely in English
 
-- Make a setup.py and MANIFEST.in for building a package for your Linux 
+- Make a setup.py and MANIFEST.in for building a package for your Linux
   distribution (Debian and derived, Slackware)
-  
+
 - It was clean the main executable code
 
 +--------------------------------+
@@ -47,12 +57,12 @@ August 25 2012  Version 0.6
 +--------------------------------+
 - Modified the program manual (I hope it is more understandable)
 
-- Adjusted positional parameters in this order: 
-  program_name > option > path-name (optional) 
+- Adjusted positional parameters in this order:
+  program_name > option > path-name (optional)
 
 
 +--------------------------+
 Nov. 09  2010  Version 0.5
 +--------------------------+
 
-Initial not public release 
+Initial not public release
