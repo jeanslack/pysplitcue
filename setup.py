@@ -30,9 +30,9 @@ This file is part of pysplitcue.
 
 """
 from setuptools import setup, find_packages
-from pysplc.str_utils import strings
+from pysplc.str_utils import information
 
-cr = strings()
+cr = information()
 DATA = cr[0]
 LONG_DESCRIPTION = cr[1]
 LONG_HELP = cr[2]

@@ -1,6 +1,6 @@
 """
 Name: str_utils
-Porpose: used strings
+Porpose: useful information strings
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
 ####################################################################
@@ -22,27 +22,28 @@ This file is part of pysplitcue.
 """
 
 
-def strings():
+def information():
     """
     All general info of the pysplitcue
     """
     data = {'author': "Gianluca Pernigotto - Jeanslack",
             'mail': '<jeanlucperni@gmail.com>',
             'copyright': '© 2013-2021',
-            'version': '2.0.0',
-            'release': 'December 07 2021',
+            'version': '2.1.1',
+            'release': 'December 14 2021',
             'rls_name': "Pysplitcue",
             'prg_name': "pysplitcue",
             'webpage': "https://github.com/jeanslack/pysplitcue",
-            'short_decript': ('Splitting utilities for big audio tracks '
-                              'supplied with CUE sheet.'),
+            'short_decript': ("Splitter utility for audio tracks supplied "
+                              "with CUE sheet, based on shntool and cuetools "
+                              "libraries."),
             }
     long_desript = """
 Pysplitcue is a stupid wrapper for the **shntool** and **cuetools** libraries.
 It splits big audio tracks using informations contained in the associated
-**"CUE"** file. It supports Wav, Flac and Ape audio formats and auto tag.
-Requires related **'*.cue'** sheet file to read audio metadata and execute
-commands for splitting and tagging.
+**"CUE"** file. It supports Wav, Flac and Ape audio formats and auto tag only
+for flac format. Requires related **'*.cue'** sheet file to read audio metadata
+and execute commands for splitting and tagging.
 """
 
     long_help = (f"{data['prg_name']}: {data['version']}\n"
@@ -50,7 +51,8 @@ commands for splitting and tagging.
 
     short_help = "Usage: pysplitcue [OPTION] ['PATH NAME']"
 
-    try_help = "Try: 'pysplitcue --help' for more information."
+    try_help = ("Type 'pysplitcue -h' for help or, "
+                "more detailed, run 'man pysplitcue'")
 
     lic = f"""
 Copyright - {data['copyright']} {data['author']}
