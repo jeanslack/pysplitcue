@@ -6,7 +6,7 @@ Porpose: wraps the shnsplit and cuetag commands
 Platform: Mac OsX, Gnu/Linux
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: Dec 13 2021
+Rev: Dec 15 2021
 Code checker: flake8 and pylint
 ####################################################################
 

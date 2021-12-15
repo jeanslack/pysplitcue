@@ -1,12 +1,13 @@
-# Pysplitcue - Splitter utility for CD audio tracks.
+# Pysplitcue - CUE sheet splitter, based on shntool and cuetools libraries.
 
-Pysplitcue is a stupid wrapper for the **shntool** and **cuetools** libraries.
+Pysplitcue is a stupid wrapper for the [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
+and [cuetools](https://github.com/svend/cuetools) libraries.
 It splits big audio tracks using informations contained in the associated
 **"CUE"** sheet. It supports Wav, Flac and Ape audio formats and auto tag only
 for flac format. Requires related **'*.cue'** file to read audio metadata
 and execute commands for splitting and tagging.
 
-## Dependencies requires
+## Requires
 
 - Python >=3.6
 - cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
@@ -17,7 +18,7 @@ and execute commands for splitting and tagging.
 
 ## Usage
 
-usage: `pysplitcue [-h] [-v] [-c] [-p {wav,flac,ape}] -i FILE.cue [-o OUTPUTDIR]`   
+usage: `pysplitcue [-h] [-v] [-c] [-p {wav,flac,ape}] -i IMPUTFILE [-o OUTPUTDIR]`   
 
 optional arguments:   
 
@@ -31,12 +32,12 @@ optional arguments:
 
 ## Example
 
-`pysplitcue -i 'FILE.cue'`   
+`pysplitcue -i 'inputfile.cue'`   
 
 To split and convert `wav` or `ape` audio format into the relative individual 
 `flac` format audio tracks.   
 
-`pysplitcue -i '/User/FILE.cue' -p wav -o 'my-awesome-tracklist'`   
+`pysplitcue -i '/User/music/collection/inputfile.cue' -p wav -o 'my-awesome-tracklist'`   
 
 This command splits the individual audio tracks into `wav` format 
 and saves them in the 'my-awesome-tracklist' folder.   

@@ -34,9 +34,8 @@ def information():
             'rls_name': "Pysplitcue",
             'prg_name': "pysplitcue",
             'webpage': "https://github.com/jeanslack/pysplitcue",
-            'short_decript': ("Splitter utility for audio tracks supplied "
-                              "with CUE sheet, based on shntool and cuetools "
-                              "libraries."),
+            'short_decript': ("CUE sheet Splitter, based on shntool "
+                              "and cuetools libraries."),
             }
     long_desript = """
 Pysplitcue is a stupid wrapper for the **shntool** and **cuetools** libraries.
