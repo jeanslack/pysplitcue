@@ -1,12 +1,13 @@
-# Pysplitcue - Splitting utilities for big audio tracks supplied with CUE sheet.
+# Pysplitcue - CUE sheet splitter, based on shntool and cuetools libraries.
 
-Pysplitcue is a stupid wrapper for the **shntool** and **cuetools** libraries. 
-It splits big audio tracks using informations contained in the associated **"CUE"** 
-file. It supports Wav, Flac and Ape audio formats and auto tag. 
-Requires related **'*.cue'** sheet file to read audio metadata and execute commands 
-for splitting and tagging.
+Pysplitcue is a stupid wrapper for the [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
+and [cuetools](https://github.com/svend/cuetools) libraries.
+It splits big audio tracks using informations contained in the associated
+**"CUE"** sheet. It supports Wav, Flac and Ape audio formats and auto tag only
+for flac format. Requires related **'*.cue'** file to read audio metadata
+and execute commands for splitting and tagging.
 
-## Dependencies requires
+## Requires
 
 - Python >=3.6
 - cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
@@ -17,22 +18,30 @@ for splitting and tagging.
 
 ## Usage
 
-usage: `pysplitcue [-h] [-v] [-c] [-o {wav,flac,ape}] [-i FILE]`   
+usage: `pysplitcue [-h] [-v] [-c] [-p {wav,flac,ape}] -i IMPUTFILE [-o OUTPUTDIR]`   
 
 optional arguments:   
 
-  `-h, --help`         show this help message and exit   
-  `-v, --version`      show the current version and exit   
-  `-c, --check`        list of installed or missing dependencies   
-  `-o {wav,flac,ape}`  output audio format   
-  `-i FILE`            input audio filename to splitting   
+  `-h, --help` show this help message and exit   
+  `-v, --version` Show the current version and exit   
+  `-c, --check-requires` List of installed or missing dependencies   
+  `-p {wav,flac,ape}, --preferred-format {wav,flac,ape}` Preferred audio format to output, default is flac   
+  `-i INPUTFILE, --input-cuefile INPUTFILE` INPUTFILE must be a CUE sheet with `.cue` filename extension   
+  `-o OUTPUTDIR, --output-dir OUTPUTDIR` Output directory, default '.'   
+
 
 ## Example
 
-`pysplitcue -o flac -i file.wav`   
+`pysplitcue -i 'inputfile.cue'`   
 
-To split and convert wav audio format into the relative individual auto-tagged 
-flac format audio tracks.
+To split and convert `wav` or `ape` audio format into the relative individual 
+`flac` format audio tracks.   
+
+`pysplitcue -i '/User/music/collection/inputfile.cue' -p wav -o 'my-awesome-tracklist'`   
+
+This command splits the individual audio tracks into `wav` format 
+and saves them in the 'my-awesome-tracklist' folder.   
+
 
 ## Installation
 

@@ -4,8 +4,8 @@
 First release: 25/08/2012
 
 ########################################################
-Name: launcher
-Porpose: run pysplitcue module
+Name: pysplitcue
+Porpose: run splc module
 Platform: Mac OsX, Gnu/Linux
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3

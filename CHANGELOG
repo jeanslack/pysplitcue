@@ -1,4 +1,17 @@
 +--------------------------------+
+December 15 2021  Version 2.1.1
++--------------------------------+
+
+- Changed, input file must be CUE sheet now.
+- Fixed which(cuetag.sh) variable on splc.py .
+- Changed `subprocess.check_call` to `subprocess.run`
+- Added option to move audio tracks to an output folder of your choice.
+- Fixed `warning: number of files does not match number of tracks` see #4.
+- Use a temp dir to fix #4 .
+- Rewrite man page and help.
+- The flac format is the default in the choice of output formats.
+
++--------------------------------+
 December 07 2021  Version 2.0.0
 +--------------------------------+
 
