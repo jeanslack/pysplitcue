@@ -32,7 +32,7 @@ import shutil
 import argparse
 import subprocess
 import tempfile
-from pysplc.str_utils import information
+from pysplitcue.str_utils import information
 
 # strings of information
 INFO = information()
@@ -248,25 +248,12 @@ def main():
                 # add_help=False,
                 )
     parser.add_argument(
-                '-v', '--version',
+                '--version',
                 help="Show the current version and exit",
                 # action="store_true",
                 action='version',
                 version=f"pysplitcue v{DATA['version']} - {DATA['release']}",
                        )
-    parser.add_argument(
-                '-c', '--check-requires',
-                help="List of installed or missing dependencies",
-                action="store_true",
-                required=False,
-                       )
-    parser.add_argument(
-                '-p', '--preferred-format',
-                choices=["wav", "flac", "ape"],
-                help="Preferred audio format to output, default is flac",
-                required=False,
-                default='flac',
-                        )
     parser.add_argument(
                 '-i', '--input-cuefile',
                 metavar='IMPUTFILE',
@@ -280,6 +267,19 @@ def main():
                 action="store",
                 required=True,
                 )
+    parser.add_argument(
+                '-c', '--check-requires',
+                help="List of installed or missing dependencies",
+                action="store_true",
+                required=False,
+                       )
+    parser.add_argument(
+                '-p', '--preferred-format',
+                choices=["wav", "flac", "ape"],
+                help="Preferred audio format to output, default is flac",
+                required=False,
+                default='flac',
+                        )
     parser.add_argument("-o", "--output-dir",
                         action="store",
                         type=str,

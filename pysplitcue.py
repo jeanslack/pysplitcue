@@ -9,9 +9,9 @@ Porpose: run splc module
 Platform: Mac OsX, Gnu/Linux
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: January 26 2015, Nov 21 2017, Nov 24 2017, Aug 8 2018, Dec 06 2021
+Rev: January 26 2015, Nov 21 2017, Nov 24 2017, Aug 8 2018, Dec 24 2021
 """
 
 if __name__ == "__main__":
-    from pysplc import splc
-    splc.main()
+    from pysplitcue import __main__
+    __main__.main()

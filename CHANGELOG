@@ -1,4 +1,14 @@
 +--------------------------------+
+December 24 2021  Version 2.1.2
++--------------------------------+
+
+- Changed executable name.
+- Fixed "No executable after pip install" #6
+- Updated man page, help and README.md.
+- Updated actions for parsing arguments.
+- Fixed COPYING in MANIFEST.in file.
+
++--------------------------------+
 December 15 2021  Version 2.1.1
 +--------------------------------+
 

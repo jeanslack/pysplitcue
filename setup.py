@@ -30,7 +30,7 @@ This file is part of pysplitcue.
 
 """
 from setuptools import setup, find_packages
-from pysplc.str_utils import information
+from pysplitcue.str_utils import information
 
 cr = information()
 DATA = cr[0]
@@ -77,8 +77,10 @@ setup(name=DATA['prg_name'],
       license=LICENSE,
       platforms=["Linux", "Unix", "MacOS"],
       packages=find_packages(),
-      scripts=['pysplitcue'],
       data_files=DATA_FILES,
+      zip_safe=False,
+      python_requires=">=3.6",
+      entry_points={
+          "console_scripts": ['pysplitcue = pysplitcue.__main__:main']},
       classifiers=CLASSIFIERS,
-      # install_requires=REQUIRES,
       )

@@ -17,17 +17,20 @@ and execute commands for splitting and tagging.
 - wavpack
 
 ## Usage
+usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-c] [-p {wav,flac,ape}] [-o OUTPUTDIR]`   
 
-usage: `pysplitcue [-h] [-v] [-c] [-p {wav,flac,ape}] -i IMPUTFILE [-o OUTPUTDIR]`   
-
-optional arguments:   
-
-  `-h, --help` show this help message and exit   
-  `-v, --version` Show the current version and exit   
-  `-c, --check-requires` List of installed or missing dependencies   
-  `-p {wav,flac,ape}, --preferred-format {wav,flac,ape}` Preferred audio format to output, default is flac   
-  `-i INPUTFILE, --input-cuefile INPUTFILE` INPUTFILE must be a CUE sheet with `.cue` filename extension   
-  `-o OUTPUTDIR, --output-dir OUTPUTDIR` Output directory, default '.'   
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             Show the current version and exit
+  -i IMPUTFILE, --input-cuefile IMPUTFILE
+                        INPUTFILE must be a CUE sheet with '.cue' filename extension
+  -c, --check-requires  List of installed or missing dependencies
+  -p {wav,flac,ape}, --preferred-format {wav,flac,ape}
+                        Preferred audio format to output, default is flac
+  -o OUTPUTDIR, --output-dir OUTPUTDIR
+                        Output directory, default '.'
+```  
 
 
 ## Example
