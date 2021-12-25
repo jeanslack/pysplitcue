@@ -22,15 +22,15 @@ This file is part of pysplitcue.
 """
 
 
-def information():
+def informations():
     """
     All general info of the pysplitcue
     """
     data = {'author': "Gianluca Pernigotto - Jeanslack",
             'mail': '<jeanlucperni@gmail.com>',
             'copyright': '© 2013-2021',
-            'version': '2.1.1',
-            'release': 'December 14 2021',
+            'version': '2.1.2',
+            'release': 'December 25 2021',
             'rls_name': "Pysplitcue",
             'prg_name': "pysplitcue",
             'webpage': "https://github.com/jeanslack/pysplitcue",

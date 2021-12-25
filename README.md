@@ -17,17 +17,22 @@ and execute commands for splitting and tagging.
 - wavpack
 
 ## Usage
+usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav,flac,ape}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
 
-usage: `pysplitcue [-h] [-v] [-c] [-p {wav,flac,ape}] -i IMPUTFILE [-o OUTPUTDIR]`   
-
-optional arguments:   
-
-  `-h, --help` show this help message and exit   
-  `-v, --version` Show the current version and exit   
-  `-c, --check-requires` List of installed or missing dependencies   
-  `-p {wav,flac,ape}, --preferred-format {wav,flac,ape}` Preferred audio format to output, default is flac   
-  `-i INPUTFILE, --input-cuefile INPUTFILE` INPUTFILE must be a CUE sheet with `.cue` filename extension   
-  `-o OUTPUTDIR, --output-dir OUTPUTDIR` Output directory, default '.'   
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             Show the current version and exit
+  -i IMPUTFILE, --input-cuefile IMPUTFILE
+                        INPUTFILE must be a CUE sheet with '.cue' filename extension
+  -f {wav,flac,ape}, --format-type {wav,flac,ape}
+                        Preferred audio format to output, default is flac
+  -o OUTPUTDIR, --output-dir OUTPUTDIR
+                        Output directory, default '.'
+  -ow {ask, never, always}, --overwrite {ask, never, always}
+                        Overwrite files on destination if they exist, default is 'ask'
+  -c, --check-requires  List of installed or missing dependencies
+```  
 
 
 ## Example
@@ -37,7 +42,7 @@ optional arguments:
 To split and convert `wav` or `ape` audio format into the relative individual 
 `flac` format audio tracks.   
 
-`pysplitcue -i '/User/music/collection/inputfile.cue' -p wav -o 'my-awesome-tracklist'`   
+`pysplitcue -i '/User/music/collection/inputfile.cue' -f wav -o 'my-awesome-tracklist'`   
 
 This command splits the individual audio tracks into `wav` format 
 and saves them in the 'my-awesome-tracklist' folder.   

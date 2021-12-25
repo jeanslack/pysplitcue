@@ -1,4 +1,20 @@
 +--------------------------------+
+December 25 2021  Version 2.1.2
++--------------------------------+
+
+- Changed the source code launcher name to pysplitcue.py .
+- Changed package name to pysplitcue
+- Changed splc.py module to pysplitcue.py.
+- Fixed "No executable after pip install" #6
+- Changed `-p`, `--preferred-format` option to `-f`, `format-type`
+- Updated man page, help and README.md.
+- Updated actions for parsing arguments.
+- Fixed COPYING in MANIFEST.in file.
+- Added new option to set actions to prevent or allow overwriting of
+  existing files.
+- Improved console messages (made some cosmetic text).
+
++--------------------------------+
 December 15 2021  Version 2.1.1
 +--------------------------------+
 

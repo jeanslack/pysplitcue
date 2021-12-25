@@ -1,12 +1,12 @@
 """
 First release: 25/08/2012
 
-Name: pysplitcue
+Name: splitcue.py
 Porpose: wraps the shnsplit and cuetag commands
 Platform: Mac OsX, Gnu/Linux
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: Dec 15 2021
+Rev: Dec 25 2021
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -32,10 +32,11 @@ import shutil
 import argparse
 import subprocess
 import tempfile
-from pysplc.str_utils import information
+from pysplitcue.str_utils import informations
+from pysplitcue.datastrings import msgdebug, msgcolor, msgend
 
 # strings of information
-INFO = information()
+INFO = informations()
 DATA = INFO[0]
 
 
@@ -49,13 +50,11 @@ def check_executables():
     elif which('cuetag.sh'):
         cuetag = which('cuetag.sh')
     else:
-        sys.stderr.write("\033[31;1mERROR:\033[0m pysplitcue: 'cuetag' "
-                         "is required, please install 'cuetools'.\n")
+        msgdebug(err="'cuetag' is required, please install 'cuetools'.")
         sys.exit(1)
 
     if not which('shntool'):
-        sys.stderr.write("\033[31;1mERROR:\033[0m pysplitcue: 'shntool' "
-                         "is required, please install it.\n")
+        msgdebug(err="'shntool' is required, please install it.")
         sys.exit(1)
 
     return cuetag
@@ -72,17 +71,17 @@ def dependencies():
         # if which(required):
         if which(required, mode=os.F_OK | os.X_OK, path=None):
 
-            print(f"Check for: '{required}' ..Ok")
+            msgcolor(head=f"Check for: '{required}'", azure="..Ok")
         else:
-            print(f"Check for: '{required}' ..Not Installed")
+            msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
 
     if which('cuetag', mode=os.F_OK | os.X_OK, path=None):
-        print("Check for: 'cuetag' ..Ok")
+        msgcolor(head="Check for: 'cuetag'", azure="..Ok")
 
     elif which('cuetag.sh', mode=os.F_OK | os.X_OK, path=None):
-        print("Check for: 'cuetag.sh' ..Ok")
+        msgcolor(head="Check for: 'cuetag.sh'", azure="..Ok")
     else:
-        print("Check for: 'cuetag' ..Not Installed")
+        msgcolor(head="Check for: 'cuetag'", orange="..Not Installed")
 # ----------------------------------------------------------#
 
 
@@ -123,19 +122,20 @@ def run_process_splitting(filecue, audiofile, preferred_format, tmpdir):
                  }
 
     if f'{inputformat}:{preferred_format}' in cmd_split:
-        print("\nOn splitting audio tracks...")
+        msgdebug(info="splitting audio tracks...")
         split = cmd_split[f'{inputformat}:{preferred_format}']
         try:
             subprocess.run(split, check=True, shell=True)
 
         except subprocess.CalledProcessError as err:
-            sys.exit(f"\033[31;1mERROR:\033[0m {err}")
+            msgdebug(err=f"{err}")
+            sys.exit(1)
 
         else:
-            print("\033[1m...done splitting\033[0m")
+            msgdebug(info="...done splitting")
     else:
-        msg = f"Unsupported input file format '{inputformat}'"
-        sys.exit(f"\033[31;1mERROR:\033[0m {msg}")
+        msgdebug(err=f"Unsupported input file format '{inputformat}'")
+        sys.exit(1)
 # ----------------------------------------------------------#
 
 
@@ -153,17 +153,18 @@ def run_process_tagging(filename, audiofile, preferred_format):
                'ape:flac': f'{cuetag} "{filename}" *.flac'}
 
     if f'{inputformat}:{preferred_format}' in cmd_tag:
-        print("\nApply tags on audio tracks...")
+        msgdebug(info="Apply tags on audio tracks...")
         tag = cmd_tag[f'{inputformat}:{preferred_format}']
 
         try:
             subprocess.run(tag, check=True, shell=True)
 
         except subprocess.CalledProcessError as err:
-            sys.exit(f"\033[31;1mERROR:\033[0m {err}")
+            msgdebug(err=f"{err}")
+            sys.exit(1)
 
         else:
-            print("\033[1m...done tagging\033[0m")
+            msgdebug(info="...done tagging")
     else:
         exitstatus = (f"Unsupported file format for "
                       f"tagging '{preferred_format}' ..skip")
@@ -172,25 +173,57 @@ def run_process_tagging(filename, audiofile, preferred_format):
 # ----------------------------------------------------------#
 
 
-def make_subdir(outputdir, tmpdir):
+def make_subdir(outputdir):
     """
     By giving the -o option, the user can supply a path
     with the name of a given folder for the output files.
     """
+    error = None
     if not outputdir == '.':
         try:
             os.mkdir(outputdir, mode=0o777)
         except OSError:
-            print("\033[32;1mINFO:\033[0m A destination folder "
-                  "already exists ..skip")
-
-    for track in os.listdir(tmpdir):
-        try:
-            shutil.move(os.path.join(tmpdir, track),
-                        os.path.join(outputdir, track))
-        # Catching too general exception Exception (fixme)
+            msgdebug(warn="A destination folder already exists ..skip")
         except Exception as err:
-            sys.exit(f"\033[31;1mERROR:\033[0m {err}")
+            # Catching too general exception Exception (FIXME)
+            error = err
+
+    return error
+# ----------------------------------------------------------#
+
+
+def move_files_on_outputdir(outputdir, tmpdir, overwrite):
+    """
+    All files are processed in a /temp folder. After the split
+    operation is complete, all tracks are moved from /temp folder
+    to output folder. Here evaluates what to do if files already
+    exists on output folder.
+
+    """
+    for track in os.listdir(tmpdir):
+        if os.path.exists(track):
+            if overwrite in ('n', 'N', 'y', 'Y', 'ask'):
+                while True:
+                    msgdebug(warn=f"File already exists: "
+                             f"'{os.path.join(outputdir, track)}'\n")
+                    overwrite = input("Overwrite [Y/n/all]? > ")
+                    if overwrite in ('Y', 'y', 'n', 'N', 'all', 'ALL'):
+                        break
+                    msgdebug(err=f"Invalid option '{overwrite}'")
+                    continue
+            elif overwrite == 'never':
+                msgdebug(warn=("Do not overwrite any files because "
+                               "you specified '-w never' option"))
+                return
+
+        if overwrite in ('y', 'Y', 'all', 'ALL', 'always', 'never'):
+            try:
+                shutil.move(os.path.join(tmpdir, track),
+                            os.path.join(outputdir, track))
+            # Catching too general exception Exception (FIXME)
+            except Exception as err:
+                msgdebug(err=f"{err}")
+                sys.exit(1)
 # ----------------------------------------------------------#
 
 
@@ -242,44 +275,30 @@ def main():
     Parser of the users inputs (evaluates positional arguments)
     using the argparser module.
     """
-    parser = argparse.ArgumentParser(
-                prog=DATA['prg_name'],
-                description=DATA['short_decript'],
-                # add_help=False,
-                )
-    parser.add_argument(
-                '-v', '--version',
-                help="Show the current version and exit",
-                # action="store_true",
-                action='version',
-                version=f"pysplitcue v{DATA['version']} - {DATA['release']}",
-                       )
-    parser.add_argument(
-                '-c', '--check-requires',
-                help="List of installed or missing dependencies",
-                action="store_true",
-                required=False,
-                       )
-    parser.add_argument(
-                '-p', '--preferred-format',
-                choices=["wav", "flac", "ape"],
-                help="Preferred audio format to output, default is flac",
-                required=False,
-                default='flac',
+    parser = argparse.ArgumentParser(prog=DATA['prg_name'],
+                                     description=DATA['short_decript'],
+                                     # add_help=False,
+                                     )
+    parser.add_argument('--version',
+                        help="Show the current version and exit",
+                        action='version',
+                        version=(f"pysplitcue v{DATA['version']} "
+                                 f"- {DATA['release']}"),
                         )
-    parser.add_argument(
-                '-i', '--input-cuefile',
-                metavar='IMPUTFILE',
-                # type=str,
-                help=("INPUTFILE must be a CUE sheet with '.cue' "
-                      "filename extension"),
-                # dest='enable_config',
-                # action='store_true',
-                # nargs='?',
-                # default=PWD,
-                action="store",
-                required=True,
-                )
+    parser.add_argument('-i', '--input-cuefile',
+                        metavar='IMPUTFILE',
+                        help=("INPUTFILE must be a CUE sheet with '.cue' "
+                              "filename extension"),
+                        action="store",
+                        required=True,
+                        )
+    parser.add_argument('-f', '--format-type',
+                        choices=["wav", "flac", "ape"],
+                        help=("Preferred audio format to output, "
+                              "default is 'flac'"),
+                        required=False,
+                        default='flac',
+                        )
     parser.add_argument("-o", "--output-dir",
                         action="store",
                         type=str,
@@ -287,6 +306,19 @@ def main():
                         help="Output directory, default '.'",
                         required=False,
                         default='.')
+
+    parser.add_argument("-ow", "--overwrite",
+                        choices=["ask", "never", "always"],
+                        dest="overwrite",
+                        help=("Overwrite files on destination if they exist, "
+                              "default is 'ask'"),
+                        required=False,
+                        default='ask')
+    parser.add_argument('-c', '--check-requires',
+                        help="List of installed or missing dependencies",
+                        action="store_true",
+                        required=False,
+                        )
 
     args = parser.parse_args()
 
@@ -298,7 +330,8 @@ def main():
         dirname = os.path.dirname(filename)
         fname = os.path.basename(filename)
         outputdir = args.outputdir
-        suffix = args.preferred_format
+        suffix = args.format_type
+        overwrite = args.overwrite
 
         error = cuefile_check(filename)
         if error:
@@ -308,7 +341,8 @@ def main():
             os.chdir(dirname)
             titletracks = cuefile_reading(fname, suffix)
         if not titletracks:
-            sys.exit(f"pysplitcue: error: Unable to read: '{filename}'")
+            msgdebug(err=f"pysplitcue: error: Unable to read: '{filename}'")
+            sys.exit(1)
         else:
             with tempfile.TemporaryDirectory(suffix=None,
                                              prefix='pysplitcue_',
@@ -324,13 +358,18 @@ def main():
                                              suffix
                                              )
                 if runtag:
-                    print(f"\033[33;1mWARNING:\033[0m {runtag}")
+                    msgdebug(warn=f"{runtag}")
 
                 os.chdir(dirname)
-                make_subdir(outputdir, tmpdir)
+                msbdir = make_subdir(outputdir)
+                if msbdir is not None:
+                    msgdebug(err=f"{msbdir}")
+                    msgend(abort=True)
+                    sys.exit(1)
 
-            print("\033[1mFinished!\n\033[0m")
-            sys.exit(0)
+                move_files_on_outputdir(outputdir, tmpdir, overwrite)
+                msgend(done=True)
+                sys.exit(0)
 
 
 if __name__ == '__main__':
