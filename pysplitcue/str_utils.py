@@ -22,7 +22,7 @@ This file is part of pysplitcue.
 """
 
 
-def information():
+def informations():
     """
     All general info of the pysplitcue
     """
@@ -30,7 +30,7 @@ def information():
             'mail': '<jeanlucperni@gmail.com>',
             'copyright': '© 2013-2021',
             'version': '2.1.2',
-            'release': 'December 24 2021',
+            'release': 'December 25 2021',
             'rls_name': "Pysplitcue",
             'prg_name': "pysplitcue",
             'webpage': "https://github.com/jeanslack/pysplitcue",

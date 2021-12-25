@@ -30,9 +30,9 @@ This file is part of pysplitcue.
 
 """
 from setuptools import setup, find_packages
-from pysplitcue.str_utils import information
+from pysplitcue.str_utils import informations
 
-cr = information()
+cr = informations()
 DATA = cr[0]
 LONG_DESCRIPTION = cr[1]
 LONG_HELP = cr[2]
@@ -81,6 +81,6 @@ setup(name=DATA['prg_name'],
       zip_safe=False,
       python_requires=">=3.6",
       entry_points={
-          "console_scripts": ['pysplitcue = pysplitcue.__main__:main']},
+          "console_scripts": ['pysplitcue = pysplitcue.splitcue:main']},
       classifiers=CLASSIFIERS,
       )
