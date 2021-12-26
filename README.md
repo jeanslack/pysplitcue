@@ -3,9 +3,8 @@
 Pysplitcue is a stupid wrapper for the [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
 and [cuetools](https://github.com/svend/cuetools) libraries.
 It splits big audio tracks using informations contained in the associated
-**"CUE"** sheet. It supports Wav, Flac and Ape audio formats and auto tag only
-for flac format. Requires related **'*.cue'** file to read audio metadata
-and execute commands for splitting and tagging.
+**"CUE"** sheet file. It supports Wav, Flac and Ape audio formats and auto tag (only
+for flac format).
 
 ## Requires
 
@@ -13,8 +12,11 @@ and execute commands for splitting and tagging.
 - cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
 - shntool *(includes: shnsplit)*
 - flac
-- mac *(monkey's-audio, name depends to your O.S., try search: libmac2, mac)*
+- mac
 - wavpack
+
+Note for **mac** codec: monkey's-audio, name depends to your O.S., try search: libmac2, mac
+
 
 ## Usage
 usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav,flac,ape}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
@@ -24,14 +26,16 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             Show the current version and exit
   -i IMPUTFILE, --input-cuefile IMPUTFILE
-                        INPUTFILE must be a CUE sheet with '.cue' filename extension
+                        An absolute or relative CUE sheet file, i.e. with `.cue` extension
   -f {wav,flac,ape}, --format-type {wav,flac,ape}
-                        Preferred audio format to output, default is flac
+                        Preferred audio format to output, default is 'flac'
   -o OUTPUTDIR, --output-dir OUTPUTDIR
-                        Output directory, default '.'
-  -ow {ask, never, always}, --overwrite {ask, never, always}
-                        Overwrite files on destination if they exist, default is 'ask'
+                        Absolute or relative destination path for output files. By default it is the same
+                        location as IMPUTFILE
+  -ow {ask,never,always}, --overwrite {ask,never,always}
+                        Overwrite files on destination if they exist, Default is `ask` before proceeding
   -c, --check-requires  List of installed or missing dependencies
+
 ```  
 
 
