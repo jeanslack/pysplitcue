@@ -134,7 +134,8 @@ def run_process_splitting(filecue, audiofile, preferred_format, tmpdir):
         else:
             msgdebug(info="...done splitting")
     else:
-        msgdebug(err=f"Unsupported input file format '{inputformat}'")
+        msgdebug(err=(f"Unsupported formats: '{inputformat}' "
+                      f"to '{preferred_format}'"))
         sys.exit(1)
 # ----------------------------------------------------------#
 
@@ -166,8 +167,8 @@ def run_process_tagging(filename, audiofile, preferred_format):
         else:
             msgdebug(info="...done tagging")
     else:
-        exitstatus = (f"Unsupported file format for "
-                      f"tagging '{preferred_format}' ..skip")
+        exitstatus = (f"Unsupported file format '{preferred_format}' "
+                      f"for tagging  ..skip")
 
     return exitstatus
 # ----------------------------------------------------------#
@@ -181,7 +182,7 @@ def make_subdir(outputdir):
     error = None
     if not outputdir == '.':
         try:
-            os.mkdir(outputdir, mode=0o777)
+            os.mkdir(os.path.abspath(outputdir), mode=0o777)
         except OSError:
             msgdebug(warn="A destination folder already exists ..skip")
         except Exception as err:
@@ -200,12 +201,13 @@ def move_files_on_outputdir(outputdir, tmpdir, overwrite):
     exists on output folder.
 
     """
+    outputdir = os.path.abspath(outputdir)
     for track in os.listdir(tmpdir):
-        if os.path.exists(track):
+        if os.path.exists(os.path.join(outputdir, track)):
             if overwrite in ('n', 'N', 'y', 'Y', 'ask'):
                 while True:
                     msgdebug(warn=f"File already exists: "
-                             f"'{os.path.join(outputdir, track)}'\n")
+                             f"'{os.path.join(outputdir, track)}'")
                     overwrite = input("Overwrite [Y/n/all]? > ")
                     if overwrite in ('Y', 'y', 'n', 'N', 'all', 'ALL'):
                         break
@@ -213,10 +215,13 @@ def move_files_on_outputdir(outputdir, tmpdir, overwrite):
                     continue
             elif overwrite == 'never':
                 msgdebug(warn=("Do not overwrite any files because "
-                               "you specified '-w never' option"))
-                return
+                               "you specified 'never' option"))
+                return None
 
-        if overwrite in ('y', 'Y', 'all', 'ALL', 'always', 'never'):
+        if overwrite in ('y', 'Y', 'all', 'ALL', 'always', 'never', 'ask'):
+            if overwrite == 'always':
+                msgdebug(warn=("Overwrite all existing files because "
+                               "you specified the 'always' option"))
             try:
                 shutil.move(os.path.join(tmpdir, track),
                             os.path.join(outputdir, track))
@@ -224,6 +229,7 @@ def move_files_on_outputdir(outputdir, tmpdir, overwrite):
             except Exception as err:
                 msgdebug(err=f"{err}")
                 sys.exit(1)
+    return 'Done'
 # ----------------------------------------------------------#
 
 
@@ -287,8 +293,8 @@ def main():
                         )
     parser.add_argument('-i', '--input-cuefile',
                         metavar='IMPUTFILE',
-                        help=("INPUTFILE must be a CUE sheet with '.cue' "
-                              "filename extension"),
+                        help=("An absolute or relative CUE sheet file, "
+                              "i.e. with `.cue` extension"),
                         action="store",
                         required=True,
                         )
@@ -303,7 +309,9 @@ def main():
                         action="store",
                         type=str,
                         dest="outputdir",
-                        help="Output directory, default '.'",
+                        help=("Absolute or relative destination path for "
+                              "output files. By default it is the same "
+                              "location as IMPUTFILE"),
                         required=False,
                         default='.')
 
@@ -311,7 +319,7 @@ def main():
                         choices=["ask", "never", "always"],
                         dest="overwrite",
                         help=("Overwrite files on destination if they exist, "
-                              "default is 'ask'"),
+                              "Default is `ask` before proceeding"),
                         required=False,
                         default='ask')
     parser.add_argument('-c', '--check-requires',
@@ -326,17 +334,20 @@ def main():
         dependencies()
 
     elif args.input_cuefile:
-        filename = args.input_cuefile
+        filename = os.path.abspath(args.input_cuefile)
         dirname = os.path.dirname(filename)
         fname = os.path.basename(filename)
-        outputdir = args.outputdir
+        there = os.path.abspath(args.outputdir)
+        outputdir = there if args.outputdir != '.' else args.outputdir
         suffix = args.format_type
         overwrite = args.overwrite
 
         error = cuefile_check(filename)
         if error:
-            parser.error(f"Invalid file: '{filename}'\n"
-                         f"Provide a CUE sheet file (*.cue or *.CUE format).")
+            msgdebug(err=f"Invalid file: '{filename}'\n"
+                     f"Provide a CUE sheet file (*.cue or *.CUE format).")
+            sys.exit(1)
+
         else:
             os.chdir(dirname)
             titletracks = cuefile_reading(fname, suffix)
@@ -355,7 +366,7 @@ def main():
                 os.chdir(tmpdir)
                 runtag = run_process_tagging(filename,
                                              titletracks['FILE'],
-                                             suffix
+                                             suffix,
                                              )
                 if runtag:
                     msgdebug(warn=f"{runtag}")
@@ -367,7 +378,10 @@ def main():
                     msgend(abort=True)
                     sys.exit(1)
 
-                move_files_on_outputdir(outputdir, tmpdir, overwrite)
+                move = move_files_on_outputdir(outputdir, tmpdir, overwrite)
+                if move:
+                    msgcolor(head="Spitted file(s) location: ",
+                             azure=f"'{os.path.abspath(outputdir)}'")
                 msgend(done=True)
                 sys.exit(0)
 

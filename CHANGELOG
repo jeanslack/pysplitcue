@@ -1,4 +1,15 @@
 +--------------------------------+
+December 26 2021  Version 2.1.3
++--------------------------------+
+
+- Fixed `ask` option when there is nothing to overwriting #8.
+- Fixed 'WARNING: File already exists:' if you save tracks in another folder
+  and tracks already exists on cue sheet path.
+- Added the ability to include relative or absolute paths.
+- Fixes minor bugs
+
+
++--------------------------------+
 December 25 2021  Version 2.1.2
 +--------------------------------+
 
