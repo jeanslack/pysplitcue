@@ -30,21 +30,21 @@ optional arguments:
   -f {wav,flac,ape}, --format-type {wav,flac,ape}
                         Preferred audio format to output, default is 'flac'
   -o OUTPUTDIR, --output-dir OUTPUTDIR
-                        Absolute or relative destination path for output files. By default it is the same
-                        location as IMPUTFILE
+                        Absolute or relative destination path for output files. If a specified 
+                        destination folder does not exist, it will be created automatically. 
+                        By default it is the same location as IMPUTFILE
   -ow {ask,never,always}, --overwrite {ask,never,always}
                         Overwrite files on destination if they exist, Default is `ask` before proceeding
   -c, --check-requires  List of installed or missing dependencies
 
 ```  
 
-
-## Example
+## Examples
 
 `pysplitcue -i 'inputfile.cue'`   
 
-To split and convert `wav` or `ape` audio format into the relative individual 
-`flac` format audio tracks.   
+To split and convert `wav`, `flac` or `ape` audio format into the relative individual 
+`flac` format audio tracks.    
 
 `pysplitcue -i '/User/music/collection/inputfile.cue' -f wav -o 'my-awesome-tracklist'`   
 
