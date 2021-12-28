@@ -46,7 +46,7 @@ CLASSIFIERS = [
             'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
             'Natural Language :: English',
             'Operating System :: MacOS :: MacOS X',
-            'Operating System :: POSIX',
+            'Operating System :: POSIX :: Linux',
             'Programming Language :: Python :: 3',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
