@@ -4,7 +4,10 @@ Pysplitcue is a stupid wrapper for the [shntool](http://freshmeat.sourceforge.ne
 and [cuetools](https://github.com/svend/cuetools) libraries.
 It splits big audio tracks using informations contained in the associated
 **"CUE"** sheet file. It supports Wav, Flac and Ape audio formats and auto tag (only
-for flac format).
+for flac format).   
+
+**Note:** If you are satisfied with only getting files in `flac` format, there is 
+a better alternative to pysplitcue: [deflacue](https://github.com/idlesign/deflacue)
 
 ## Requires
 
@@ -12,11 +15,8 @@ for flac format).
 - cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
 - shntool *(includes: shnsplit)*
 - flac
-- mac
+- mac  *monkey's-audio, name depends to your O.S.*
 - wavpack
-
-Note for **mac** codec: monkey's-audio, name depends to your O.S., try search: libmac2, mac
-
 
 ## Usage
 usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav,flac,ape}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
