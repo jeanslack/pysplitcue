@@ -1,1 +1,7 @@
-include README.md AUTHORS BUGS CHANGELOG COPYING TODO
+include README.md 
+include AUTHORS 
+include BUGS 
+include CHANGELOG 
+include COPYING 
+include TODO
+include tests/*
