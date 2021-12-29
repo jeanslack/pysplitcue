@@ -30,7 +30,7 @@ def informations():
             'mail': '<jeanlucperni@gmail.com>',
             'copyright': '© 2013-2021',
             'version': '2.1.4',
-            'release': 'December 28 2021',
+            'release': 'December 29 2021',
             'rls_name': "Pysplitcue",
             'prg_name': "pysplitcue",
             'webpage': "https://github.com/jeanslack/pysplitcue",

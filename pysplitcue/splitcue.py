@@ -6,7 +6,7 @@ Porpose: wraps the shnsplit and cuetag commands
 Platform: Mac OsX, Gnu/Linux
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: Dec 27 2021
+Rev: Dec 29 2021
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -66,7 +66,8 @@ def dependencies():
 
 def run_process_splitting(filecue, audiofile, preferred_format, tmpdir):
     """
-    run `shnsplit` command.
+    run `shnsplit` command. Returns string error if
+    error, None otherwise.
     """
     if not which('shntool'):
         return "'shntool' is required, please install it."
@@ -92,7 +93,8 @@ def run_process_splitting(filecue, audiofile, preferred_format, tmpdir):
 
 def run_process_tagging(filename, preferred_format):
     """
-    run `cuetag` command.
+    run `cuetag` command. Returns string error if
+    error, None otherwise.
     """
     if which('cuetag'):
         cuetag = which('cuetag')
@@ -124,7 +126,9 @@ def run_process_tagging(filename, preferred_format):
 def make_subdir(outputdir):
     """
     By giving the -o option, the user can supply a custom
-    folder for the output files.
+    folder for the output files. Returns string error if
+    error, None otherwise.
+
     """
     error = None
     if not outputdir == '.':
@@ -146,6 +150,7 @@ def move_files_on_outputdir(outputdir, tmpdir, overwrite):
     operation is complete, all tracks are moved from /temp folder
     to output folder. Here evaluates what to do if files already
     exists on output folder.
+    Returns string error if error, None otherwise.
 
     """
     outputdir = os.path.abspath(outputdir)
@@ -208,7 +213,7 @@ def cuefile_reading(fname, suffix):
 # ----------------------------------------------------------#
 
 
-def cuefile_check(filename:str):
+def cuefile_check(filename: str):
     """
     Accepts an absolute or relative pathnames of a CUE file.
     Returns False if error, True otherwise.
@@ -222,10 +227,55 @@ def cuefile_check(filename:str):
 # ----------------------------------------------------------#
 
 
+def make_temp_dir(**kwargs):
+    """
+    Defines a temporary folder for working safely with files
+    """
+    with tempfile.TemporaryDirectory(suffix=None,
+                                     prefix='pysplitcue_',
+                                     dir=None) as tmpdir:
+
+        run = run_process_splitting(kwargs['fname'],
+                                    kwargs['titletracks']['FILE'],
+                                    kwargs['suffix'],
+                                    tmpdir
+                                    )
+        if run:
+            msgdebug(err=f"{run}")
+            sys.exit(1)
+
+        os.chdir(tmpdir)
+        runtag = run_process_tagging(kwargs['filename'], kwargs['suffix'])
+        if runtag:
+            msgdebug(warn=f"{runtag}")
+            sys.exit(1)
+
+        os.chdir(kwargs['dirname'])
+        msbdir = make_subdir(kwargs['outputdir'])
+        if msbdir is not None:
+            msgdebug(err=f"{msbdir}")
+            msgend(abort=True)
+            sys.exit(1)
+
+        move = move_files_on_outputdir(kwargs['outputdir'],
+                                       tmpdir,
+                                       kwargs['overwrite']
+                                       )
+        if move:
+            msgdebug(err=f"{move}")
+            sys.exit(1)
+
+        msgdebug(info="Target output: ",
+                 tail=f"\033[34m'{os.path.abspath(kwargs['outputdir'])}'"
+                      f"\033[0m")
+    msgend(done=True)
+    sys.exit(0)
+# ----------------------------------------------------------#
+
+
 def main():
     """
-    Parser of the users inputs (evaluates positional arguments)
-    using the argparser module.
+    Evaluates positional arguments using the argparser module.
     """
     parser = argparse.ArgumentParser(prog=DATA['prg_name'],
                                      description=DATA['short_decript'],
@@ -291,12 +341,10 @@ def main():
         overwrite = args.overwrite
 
         checkfile = cuefile_check(filename)
-
         if checkfile is False:
             msgdebug(err=f"Invalid file: '{filename}'\n"
                      f"Provide a CUE sheet file (*.cue).")
             sys.exit(1)
-
         else:
             os.chdir(dirname)
             titletracks = cuefile_reading(fname, suffix)
@@ -305,42 +353,14 @@ def main():
             msgdebug(err=f"pysplitcue: error: Unable to read: '{filename}'")
             sys.exit(1)
         else:
-            with tempfile.TemporaryDirectory(suffix=None,
-                                             prefix='pysplitcue_',
-                                             dir=None) as tmpdir:
-                run = run_process_splitting(fname,
-                                            titletracks['FILE'],
-                                            suffix,
-                                            tmpdir
-                                            )
-                if run:
-                    msgdebug(err=f"{run}")
-                    sys.exit(1)
-
-                os.chdir(tmpdir)
-                runtag = run_process_tagging(filename,
-                                             suffix,
-                                             )
-                if runtag:
-                    msgdebug(warn=f"{runtag}")
-                    sys.exit(1)
-
-                os.chdir(dirname)
-                msbdir = make_subdir(outputdir)
-                if msbdir is not None:
-                    msgdebug(err=f"{msbdir}")
-                    msgend(abort=True)
-                    sys.exit(1)
-
-                move = move_files_on_outputdir(outputdir, tmpdir, overwrite)
-                if move:
-                    msgdebug(err=f"{move}")
-                    sys.exit(1)
-                msgdebug(info="Target output: ",
-                         tail=f"\033[34m'{os.path.abspath(outputdir)}'"
-                              f"\033[0m")
-                msgend(done=True)
-                sys.exit(0)
+            make_temp_dir(filename=filename,
+                          dirname=dirname,
+                          fname=fname,
+                          outputdir=outputdir,
+                          suffix=suffix,
+                          overwrite=overwrite,
+                          titletracks=titletracks,
+                          )
 
 
 if __name__ == '__main__':

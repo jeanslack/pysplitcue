@@ -4,7 +4,7 @@ December 28 2021  Version 2.1.4
 
 - Fixed issue using `-o` option for recursive directory creation.
 - Code refactoring
-- Made unittest test case
+- Made unittest test cases
 
 +--------------------------------+
 December 26 2021  Version 2.1.3
