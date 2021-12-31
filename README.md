@@ -15,12 +15,12 @@ It splits big audio tracks using informations contained in the associated
 ## Requires
 
 - Python >=3.6
-- cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
-- shntool *(includes: shnsplit)*
+- cuetools *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
+- shntool *(includes shnsplit)*
 - flac
 - lame
-- oggenc
-- mac  *monkey's-audio, name depends to your O.S.*
+- vorbis-tools *(include oggenc, oggdec)*
+- mac  *(monkey's-audio, name depends to your O.S.)*
 - wavpack
 
 **Note:** If you are satisfied with only getting files in `flac` format, there is 
@@ -54,7 +54,7 @@ optional arguments:
 
 `pysplitcue -i 'inputfile.cue'`   
 
-To split and convert `wav`, `flac` or `ape` audio format into the relative individual 
+To split and convert several audio formats into the relative individual 
 `flac` format audio tracks.    
 
 `pysplitcue -i '/User/music/collection/inputfile.cue' -f wav -o 'my-awesome-tracklist'`   
