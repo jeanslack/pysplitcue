@@ -6,7 +6,7 @@ Porpose: wraps the shnsplit and cuetag commands
 Platform: Mac OsX, Gnu/Linux
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: Dec 29 2021
+Rev: Dec 31 2021
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -44,37 +44,62 @@ def dependencies():
     """
     Check for dependencies
     """
-    listing = ['flac', 'mac', 'wavpack', 'shntool', 'cuebreakpoints',
-               'cueconvert', 'cueprint']
-    for required in listing:
+    listtools = ('shntool', 'cuetag', 'cuetag.sh')
+    listencoders = ('flac', 'mac', 'wavpack', 'lame', 'oggenc')
+
+    print('--------------------------------')
+    msgcolor(green="Required tools:")
+    for required in listtools:
+        # if which(required):
+        if which(required, mode=os.F_OK | os.X_OK, path=None):
+            msgcolor(head=f"Check for: '{required}'", azure="..Ok")
+        else:
+            msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
+    print('--------------------------------')
+    msgcolor(green="Available encoders:")
+    for required in listencoders:
         # if which(required):
         if which(required, mode=os.F_OK | os.X_OK, path=None):
 
             msgcolor(head=f"Check for: '{required}'", azure="..Ok")
         else:
             msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
-
-    if which('cuetag', mode=os.F_OK | os.X_OK, path=None):
-        msgcolor(head="Check for: 'cuetag'", azure="..Ok")
-
-    elif which('cuetag.sh', mode=os.F_OK | os.X_OK, path=None):
-        msgcolor(head="Check for: 'cuetag.sh'", azure="..Ok")
-    else:
-        msgcolor(head="Check for: 'cuetag'", orange="..Not Installed")
+    print('--------------------------------')
 # ----------------------------------------------------------#
 
 
 def run_process_splitting(filecue, audiofile, preferred_format, tmpdir):
     """
-    run `shnsplit` command. Returns string error if
-    error, None otherwise.
+    Run `shnsplit` command which is an alias to `shntool split`:
+    -f file Specifies a file from which to read split point data.
+    -d dir Specify output directory
+    -o str Specify  output file format extension, encoder and
+       arguments surrounded by quotes. If arguments are given,
+       then one of them must contain "%f"
+    -t fmt Name output files in user‐specified format based on CUE
+       sheet fields:
+                        %p Performer
+                        %a Album
+                        %n Track number
+                        %t Track title
+
+    Returns string error if error, None otherwise.
     """
     if not which('shntool'):
         return "'shntool' is required, please install it."
 
     name = os.path.splitext(audiofile)[0]
-    cmd_split = (f'shnsplit -o {preferred_format} -f "{filecue}" '
-                 f'-t "%n - %t" -d "{tmpdir}" "{name}.{preferred_format}"')
+    inext = os.path.splitext(audiofile)[1]
+
+    mode = {'flac': f'flac flac -V --best -o %f -',
+            'wav': 'wav',
+            'mp3': f'cust ext=mp3 lame --quiet - -o %f -',
+            'ogg': f'cust ext=ogg oggenc -b 192 -o %f -',
+            'ape': 'ape',
+            'wv': 'wv',
+            }
+    cmd_split = (f'shnsplit -f "{filecue}" -o "{mode[preferred_format]}" '
+                 f'-t "%n - %t" -d "{tmpdir}" "{name}{inext}"')
 
     msgdebug(info="splitting audio tracks...")
     try:
@@ -103,9 +128,9 @@ def run_process_tagging(filename, preferred_format):
     else:
         return "'cuetag' is required, please install 'cuetools'."
 
-    if preferred_format == 'flac':
+    if preferred_format in ('flac', 'mp3', 'ogg'):
         msgdebug(info="Apply tags on audio tracks...")
-        cmd_tag = f'{cuetag} "{filename}" *.flac'
+        cmd_tag = f'{cuetag} "{filename}" *.{preferred_format}'
 
         try:
             subprocess.run(cmd_tag, check=True, shell=True)
@@ -130,17 +155,16 @@ def make_subdir(outputdir):
     error, None otherwise.
 
     """
-    error = None
     if not outputdir == '.':
         try:
             os.makedirs(os.path.abspath(outputdir), mode=0o777)
         except OSError:
             msgdebug(warn="A destination folder already exists ..skip")
-        except Exception as err:
+        except Exception as error:
             # Catching too general exception Exception (FIXME)
-            error = err
+            return error
 
-    return error
+    return None
 # ----------------------------------------------------------#
 
 
@@ -216,14 +240,14 @@ def cuefile_reading(fname, suffix):
 def cuefile_check(filename: str):
     """
     Accepts an absolute or relative pathnames of a CUE file.
-    Returns False if error, True otherwise.
+    Returns True if error, None otherwise.
     """
     if not os.path.isfile(filename):
-        return False
+        return True
     if os.path.splitext(filename)[1] not in ('.cue', '.CUE'):
-        return False
+        return True
 
-    return True
+    return None
 # ----------------------------------------------------------#
 
 
@@ -295,7 +319,7 @@ def main():
                         required=True,
                         )
     parser.add_argument('-f', '--format-type',
-                        choices=["wav", "flac", "ape"],
+                        choices=["wav", "wv", "flac", "ape", "mp3", "ogg"],
                         help=("Preferred audio format to output, "
                               "default is 'flac'"),
                         required=False,
@@ -341,7 +365,7 @@ def main():
         overwrite = args.overwrite
 
         checkfile = cuefile_check(filename)
-        if checkfile is False:
+        if checkfile is True:
             msgdebug(err=f"Invalid file: '{filename}'\n"
                      f"Provide a CUE sheet file (*.cue).")
             sys.exit(1)
