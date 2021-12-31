@@ -1,25 +1,36 @@
 # Pysplitcue - CUE sheet splitter, based on shntool and cuetools libraries.
 
-Pysplitcue is a stupid wrapper for the [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
+Pysplitcue is a stupid wrapper for the 
+[shntool](http://freshmeat.sourceforge.net/projects/shntool) 
 and [cuetools](https://github.com/svend/cuetools) libraries.
 It splits big audio tracks using informations contained in the associated
-**"CUE"** sheet file. It supports Wav, Flac and Ape audio formats and auto tag (only
-for flac format).   
+**"CUE"** sheet file.   
 
-**Note:** If you are satisfied with only getting files in `flac` format, there is 
-a better alternative to pysplitcue: [deflacue](https://github.com/idlesign/deflacue)
+# Features
+
+- Supported input formats: WAV, FLAC, APE, WavPack
+- Supported output formats: FLAC, WAV, WavPack, OGG or MP3
+- Auto-tag is supported only for FLAC, MP3 and OGG formats
 
 ## Requires
 
 - Python >=3.6
-- cuetools *(includes: cuebreakpoints, cueconvert, cueprint, cuetag)*
-- shntool *(includes: shnsplit)*
+- cuetools *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
+- shntool *(includes shnsplit)*
 - flac
-- mac  *monkey's-audio, name depends to your O.S.*
+- lame
+- vorbis-tools *(include oggenc, oggdec)*
+- mac  *(monkey's-audio, name depends to your O.S.)*
 - wavpack
 
+**Note:** If you are satisfied with only getting files in `flac` format, there is 
+a better alternative to pysplitcue: [deflacue](https://github.com/idlesign/deflacue). 
+Also, if you prefer to use a GUI instead of the command line, check out 
+[flacon](https://github.com/flacon/flacon) as well.
+
+
 ## Usage
-usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav,flac,ape}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
+usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav, wv, flac, ape, mp3, ogg}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
 
 ```
 optional arguments:
@@ -27,7 +38,7 @@ optional arguments:
   --version             Show the current version and exit
   -i IMPUTFILE, --input-cuefile IMPUTFILE
                         An absolute or relative CUE sheet file, i.e. with `.cue` extension
-  -f {wav,flac,ape}, --format-type {wav,flac,ape}
+  -f {wav, wv, flac, ape, mp3, ogg}, --format-type {wav, wv, flac, ape, mp3, ogg}
                         Preferred audio format to output, default is 'flac'
   -o OUTPUTDIR, --output-dir OUTPUTDIR
                         Absolute or relative destination path for output files. If a specified 
@@ -43,7 +54,7 @@ optional arguments:
 
 `pysplitcue -i 'inputfile.cue'`   
 
-To split and convert `wav`, `flac` or `ape` audio format into the relative individual 
+To split and convert several audio formats into the relative individual 
 `flac` format audio tracks.    
 
 `pysplitcue -i '/User/music/collection/inputfile.cue' -f wav -o 'my-awesome-tracklist'`   

@@ -28,9 +28,9 @@ def informations():
     """
     data = {'author': "Gianluca Pernigotto - Jeanslack",
             'mail': '<jeanlucperni@gmail.com>',
-            'copyright': '© 2013-2021',
-            'version': '2.1.4',
-            'release': 'December 29 2021',
+            'copyright': '© 2013-2022',
+            'version': '2.1.5',
+            'release': 'December 31 2021',
             'rls_name': "Pysplitcue",
             'prg_name': "pysplitcue",
             'webpage': "https://github.com/jeanslack/pysplitcue",
@@ -38,10 +38,11 @@ def informations():
                               "and cuetools libraries."),
             }
     long_desript = """
-Pysplitcue is a stupid wrapper for the **shntool** and **cuetools** libraries.
+Pysplitcue is a stupid wrapper based on **shntool** and **cuetools** libraries.
 It splits big audio tracks using informations contained in the associated
-**"CUE"** sheet file. It supports Wav, Flac and Ape audio formats and auto tag (only
-for flac format).
+**"CUE"** sheet file. Supported input formats are WAV, FLAC, APE, WavPack.
+Supported output formats are FLAC, WAV, WavPack, OGG or MP3. Auto-tag is
+supported only for FLAC, MP3 and OGG formats.
 """
 
     long_help = (f"{data['prg_name']}: {data['version']}\n"

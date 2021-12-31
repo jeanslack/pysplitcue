@@ -39,7 +39,7 @@ class CheckCueSheetTestCase(unittest.TestCase):
 
         """
         check = splitcue.cuefile_check(FILECUE)
-        self.assertEqual(check, True)
+        self.assertEqual(check, None)
 
 
 class ParseCueSheetTestCase(unittest.TestCase):
