@@ -15,6 +15,7 @@ It splits big audio tracks using informations contained in the associated
 ## Requires
 
 - Python >=3.6
+- chardet (The Universal Character Encoding Detector)
 - cuetools *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
 - shntool *(includes shnsplit)*
 - flac

@@ -13,5 +13,5 @@ Rev: January 26 2015, Nov 21 2017, Nov 24 2017, Aug 8 2018, Dec 24 2021
 """
 
 if __name__ == "__main__":
-    from pysplitcue import splitcue
-    splitcue.main()
+    from pysplitcue import main
+    main.main()

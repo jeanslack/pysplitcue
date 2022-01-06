@@ -1,8 +1,10 @@
 +--------------------------------+
-December 31 2021  Version 2.1.5
+January  04 2022  Version 2.1.5
 +--------------------------------+
 
-Added support for mp3, ogg output formats
+- Added support for mp3, ogg output formats
+-
+
 
 +--------------------------------+
 December 28 2021  Version 2.1.4

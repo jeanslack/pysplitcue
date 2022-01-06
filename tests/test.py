@@ -1,92 +1,81 @@
 # -*- coding: UTF-8 -*-
 
-# Porpose: Contains test cases for the splitcue object.
-# Rev: Dec.28.2021
-
+"""
+Porpose: Contains test cases for the splitcue object.
+Rev: Jan.05.2022
+"""
 import sys
 import os.path
-import shutil
 import unittest
+
 
 PATH = os.path.realpath(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(os.path.dirname(PATH)))
 
 try:
-    from pysplitcue import splitcue
+    from pysplitcue.splitcue import PySplitCue
+
+    from pysplitcue.exceptions import InvalidFile
 
 except ImportError as error:
     sys.exit(error)
 
 WORKDIR = os.path.dirname(PATH)
-TMPDIR = os.path.join(WORKDIR, 'tmp')
-FILECUE = os.path.join(WORKDIR, 'Three Samples.cue')
-FILEFLAC = os.path.join(WORKDIR, 'Three Samples.flac')
+FILECUE_ASCII = os.path.join(WORKDIR, 'Three Samples_ASCII.cue')
+FILECUE_ISO = os.path.join(WORKDIR, 'Three Samples_ISO-8859-1.cue')
 OUTFORMAT = 'flac'
-
-if os.path.exists(TMPDIR):
-    shutil.rmtree(TMPDIR)
-
-os.mkdir(TMPDIR, mode=0o777)
+OVERWRITE = "always"
 
 
-class CheckCueSheetTestCase(unittest.TestCase):
-    """
-    Test case for cue sheet file check out
-    """
-    def test_invalid_file(self):
-        """
-        test error with an invalid filename.
-
-        """
-        check = splitcue.cuefile_check(FILECUE)
-        self.assertEqual(check, None)
-
-
-class ParseCueSheetTestCase(unittest.TestCase):
+class ParseCueSheetTestCaseISO(unittest.TestCase):
     """
     Test case to get data from cue sheet file
     """
-    def test_read_cue_file(self):
+    def setUp(self):
         """
-        test to parse file cue
+        Method called to prepare the test fixture
         """
-        titletracks = splitcue.cuefile_reading(FILECUE,
-                                               OUTFORMAT
-                                               )
-        #self.assertTrue(bool(titletracks), True)
-        self.assertIs(bool(titletracks), True)
+        self.args = {'outputdir': os.path.dirname(FILECUE_ISO),
+                     'suffix': OUTFORMAT,
+                     'overwrite': OVERWRITE}
+
+    def test_invalid_file(self):
+        """
+        test to assert InvalidFile exception
+        """
+        fname = {'filename': '/invalid/file.cue'}
+
+        with self.assertRaises(InvalidFile):
+            PySplitCue(**{**self.args, **fname})
 
 
-class RunSplitCommandTestCase(unittest.TestCase):
-    """
-    Test case to run command for splitting
-    """
-    def test_run_splitting(self):
+    def test_parser_with_iso_file_encoding(self):
         """
-        test to splitting files using shntool
+        test cuefile parsing with ISO-8859-1 encoding
         """
-        split = splitcue.run_process_splitting(FILECUE,
-                                               FILEFLAC,
-                                               OUTFORMAT,
-                                               TMPDIR
-                                               )
-        self.assertEqual(split, None)
+        fname = {'filename': FILECUE_ISO}
+        split = PySplitCue(**{**self.args, **fname})
+        parser = split.open_cuefile()
+        split.cuefile.close()
+        self.assertEqual(parser, None)
 
+    def test_parser_with_ascii_file_encoding(self):
+        """
+        test cuefile parsing with ASCII encoding
+        """
 
-class RunTagCommandTestCase(unittest.TestCase):
-    """
-    Test case to run command for tagging
-    """
-    def test_run_cuetag(self):
-        """
-        test to tagging files using cuetag
-        """
-        os.chdir(TMPDIR)
-        tag = splitcue.run_process_tagging(FILECUE, OUTFORMAT)
-        self.assertEqual(tag, None)
+        fname = {'filename': FILECUE_ASCII}
+
+        split = PySplitCue(**{**self.args, **fname})
+        parser = split.open_cuefile()
+        split.cuefile.close()
+        self.assertEqual(parser, None)
 
 
 def main():
+    """
+    Run
+    """
     unittest.main()
 
 

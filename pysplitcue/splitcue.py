@@ -3,10 +3,10 @@ First release: 25/08/2012
 
 Name: splitcue.py
 Porpose: wraps the shnsplit and cuetag commands
-Platform: Mac OsX, Gnu/Linux
+Platform: MacOs, Gnu/Linux, FreeBSD
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: Dec 31 2021
+Rev: January 04 2022
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -25,367 +25,271 @@ This file is part of pysplitcue.
     You should have received a copy of the GNU General Public License
     along with pysplitcue.  If not, see <http://www.gnu.org/licenses/>.
 """
-import sys
 import os
-from shutil import which
 import shutil
-import argparse
 import subprocess
 import tempfile
-from pysplitcue.str_utils import informations
-from pysplitcue.datastrings import msgdebug, msgcolor, msgend
-
-# strings of information
-INFO = informations()
-DATA = INFO[0]
+import chardet
+from pysplitcue.str_utils import msgdebug, msgend
+from pysplitcue.exceptions import InvalidFile, ParserError, TempProcessError
 
 
-def dependencies():
+class PySplitCue():
     """
-    Check for dependencies
-    """
-    listtools = ('shntool', 'cuetag', 'cuetag.sh')
-    listencoders = ('flac', 'mac', 'wavpack', 'lame', 'oggenc')
+    This class implements an interface to securely wrap tools
+    like shnsplit and cuetag and other useful configurable
+    features. Since neither shnsplit nor cuetag correctly support
+    reading CUE sheet files with encodings other than ASCII/UTF-8,
+    the PySplitCue class allows you to expand their functionality
+    by working in a temporary context without modifying the source
+    files.
 
-    print('--------------------------------')
-    msgcolor(green="Required tools:")
-    for required in listtools:
-        # if which(required):
-        if which(required, mode=os.F_OK | os.X_OK, path=None):
-            msgcolor(head=f"Check for: '{required}'", azure="..Ok")
+    Usage:
+            >>> from pysplitcue.splitcue import PySplitCue
+            >>> kwargs = {'filename': '/home/user/my_file.cue',
+                          'outputdir': '/home/user/some_other_dir',
+                          'suffix': 'flac',
+                          'overwrite': 'ask'
+                          }
+            >>> split = PySplitCue(**kwargs)
+            >>> split.open_cuefile()
+            >>> split.do_operations()
+            >>> split.cuefile.close()
+    """
+    def __init__(self, **kwargs):
+        """
+        `kwargs` must include the following keys and values:
+
+            'filename': absolute CUE sheet filename
+            'outputdir': absolute pathname to output files
+            'suffix': output format, one of "wav", "wv", "flac",
+                      "ape", "mp3", "ogg"
+            'overwrite': controls for overwriting files,
+                         one of "ask", "never", "always"
+                         Also see `move_files_on_outputdir`
+                         method.
+        """
+        self.kwargs = kwargs
+        self.kwargs['dirname'] = os.path.dirname(kwargs['filename'])
+        self.cuefile = None
+
+        fsuff = os.path.splitext(self.kwargs['filename'])[1]
+        res = os.path.isfile(self.kwargs['filename'])
+
+        if not res or fsuff not in ('.cue', '.CUE'):
+            raise InvalidFile(f"Invalid CUE sheet file: "
+                              f"'{self.kwargs['filename']}'")
+
+        os.chdir(self.kwargs['dirname'])
+
+        with open(self.kwargs['filename'], 'rb') as file:
+            self.bdata = file.read()
+            self.encoding = chardet.detect(self.bdata)
+    # ----------------------------------------------------------#
+
+    def move_files_on_outputdir(self):
+        """
+        All files are processed in a /temp folder. After the split
+        operation is complete, all tracks are moved from /temp folder
+        to output folder. Here evaluates what to do if files already
+        exists on output folder.
+        Raises TempProcessError
+        Return None otherwise.
+
+        """
+        outputdir = os.path.abspath(self.kwargs['outputdir'])
+        overwrite = self.kwargs['overwrite']
+
+        for track in os.listdir(self.kwargs['tempdir']):
+            if os.path.exists(os.path.join(outputdir, track)):
+                if overwrite in ('n', 'N', 'y', 'Y', 'ask'):
+                    while True:
+                        msgdebug(warn=f"File already exists: "
+                                 f"'{os.path.join(outputdir, track)}'")
+                        overwrite = input("Overwrite [Y/n/all]? > ")
+                        if overwrite in ('Y', 'y', 'n', 'N', 'all', 'ALL'):
+                            break
+                        msgdebug(err=f"Invalid option '{overwrite}'")
+                        continue
+                elif overwrite == 'never':
+                    msgdebug(warn=("Do not overwrite any files because "
+                                   "you specified 'never' option"))
+                    return None
+
+            if overwrite in ('y', 'Y', 'all', 'ALL', 'always', 'never', 'ask'):
+                if overwrite == 'always':
+                    msgdebug(warn=("Overwrite all existing files because "
+                                   "you specified the 'always' option"))
+                try:
+                    shutil.move(os.path.join(self.kwargs['tempdir'], track),
+                                os.path.join(outputdir, track))
+                # Catching too general exception Exception (FIXME)
+                except Exception as error:
+                    raise TempProcessError(error) from error
+
+        return None
+    # ----------------------------------------------------------#
+
+    def run_process_tagging(self):
+        """
+        run `cuetag` command.
+        Raises TempProcessError
+        Returns None otherwise.
+        """
+        if shutil.which('cuetag'):
+            cuetag = shutil.which('cuetag')
+        elif shutil.which('cuetag.sh'):
+            cuetag = shutil.which('cuetag.sh')
         else:
-            msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
-    print('--------------------------------')
-    msgcolor(green="Available encoders:")
-    for required in listencoders:
-        # if which(required):
-        if which(required, mode=os.F_OK | os.X_OK, path=None):
+            raise TempProcessError("'cuetag' is required, please "
+                                   "install 'cuetools'.")
 
-            msgcolor(head=f"Check for: '{required}'", azure="..Ok")
-        else:
-            msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
-    print('--------------------------------')
-# ----------------------------------------------------------#
-
-
-def run_process_splitting(filecue, audiofile, preferred_format, tmpdir):
-    """
-    Run `shnsplit` command which is an alias to `shntool split`:
-    -f file Specifies a file from which to read split point data.
-    -d dir Specify output directory
-    -o str Specify  output file format extension, encoder and
-       arguments surrounded by quotes. If arguments are given,
-       then one of them must contain "%f"
-    -t fmt Name output files in user‐specified format based on CUE
-       sheet fields:
-                        %p Performer
-                        %a Album
-                        %n Track number
-                        %t Track title
-
-    Returns string error if error, None otherwise.
-    """
-    if not which('shntool'):
-        return "'shntool' is required, please install it."
-
-    name = os.path.splitext(audiofile)[0]
-    inext = os.path.splitext(audiofile)[1]
-
-    mode = {'flac': f'flac flac -V --best -o %f -',
-            'wav': 'wav',
-            'mp3': f'cust ext=mp3 lame --quiet - -o %f -',
-            'ogg': f'cust ext=ogg oggenc -b 192 -o %f -',
-            'ape': 'ape',
-            'wv': 'wv',
-            }
-    cmd_split = (f'shnsplit -f "{filecue}" -o "{mode[preferred_format]}" '
-                 f'-t "%n - %t" -d "{tmpdir}" "{name}{inext}"')
-
-    msgdebug(info="splitting audio tracks...")
-    try:
-        subprocess.run(cmd_split, check=True, shell=True)
-
-    except subprocess.CalledProcessError as err:
-        msgdebug(err=f"{err}")
-        return err
-
-    else:
-        msgdebug(info="...done splitting")
-
-    return None
-# ----------------------------------------------------------#
-
-
-def run_process_tagging(filename, preferred_format):
-    """
-    run `cuetag` command. Returns string error if
-    error, None otherwise.
-    """
-    if which('cuetag'):
-        cuetag = which('cuetag')
-    elif which('cuetag.sh'):
-        cuetag = which('cuetag.sh')
-    else:
-        return "'cuetag' is required, please install 'cuetools'."
-
-    if preferred_format in ('flac', 'mp3', 'ogg'):
-        msgdebug(info="Apply tags on audio tracks...")
-        cmd_tag = f'{cuetag} "{filename}" *.{preferred_format}'
-
-        try:
-            subprocess.run(cmd_tag, check=True, shell=True)
-
-        except subprocess.CalledProcessError as err:
-            return err
-
-        else:
-            msgdebug(info="...done tagging")
-    else:
-        msgdebug(warn=(f"Unsupported file format '{preferred_format}' "
-                       f"for tagging  ..skip"))
-
-    return None
-# ----------------------------------------------------------#
-
-
-def make_subdir(outputdir):
-    """
-    By giving the -o option, the user can supply a custom
-    folder for the output files. Returns string error if
-    error, None otherwise.
-
-    """
-    if not outputdir == '.':
-        try:
-            os.makedirs(os.path.abspath(outputdir), mode=0o777)
-        except OSError:
-            msgdebug(warn="A destination folder already exists ..skip")
-        except Exception as error:
-            # Catching too general exception Exception (FIXME)
-            return error
-
-    return None
-# ----------------------------------------------------------#
-
-
-def move_files_on_outputdir(outputdir, tmpdir, overwrite):
-    """
-    All files are processed in a /temp folder. After the split
-    operation is complete, all tracks are moved from /temp folder
-    to output folder. Here evaluates what to do if files already
-    exists on output folder.
-    Returns string error if error, None otherwise.
-
-    """
-    outputdir = os.path.abspath(outputdir)
-    for track in os.listdir(tmpdir):
-        if os.path.exists(os.path.join(outputdir, track)):
-            if overwrite in ('n', 'N', 'y', 'Y', 'ask'):
-                while True:
-                    msgdebug(warn=f"File already exists: "
-                             f"'{os.path.join(outputdir, track)}'")
-                    overwrite = input("Overwrite [Y/n/all]? > ")
-                    if overwrite in ('Y', 'y', 'n', 'N', 'all', 'ALL'):
-                        break
-                    msgdebug(err=f"Invalid option '{overwrite}'")
-                    continue
-            elif overwrite == 'never':
-                msgdebug(warn=("Do not overwrite any files because "
-                               "you specified 'never' option"))
-                return None
-
-        if overwrite in ('y', 'Y', 'all', 'ALL', 'always', 'never', 'ask'):
-            if overwrite == 'always':
-                msgdebug(warn=("Overwrite all existing files because "
-                               "you specified the 'always' option"))
+        if self.kwargs['suffix'] in ('flac', 'mp3', 'ogg'):
+            msgdebug(info="Apply tags on audio tracks...")
+            cmd_tag = (f'{cuetag} "{self.kwargs["cuefile"]}" '
+                       f'*.{self.kwargs["suffix"]}'
+                       )
             try:
-                shutil.move(os.path.join(tmpdir, track),
-                            os.path.join(outputdir, track))
-            # Catching too general exception Exception (FIXME)
-            except Exception as err:
-                return err
+                subprocess.run(cmd_tag, check=True, shell=True)
 
-    return None
-# ----------------------------------------------------------#
+            except subprocess.CalledProcessError as error:
+                raise TempProcessError(error) from error
 
-
-def cuefile_reading(fname, suffix):
-    """
-    Given a *.cue sheet file, it extracts the titles
-    of the audio tracks to be split. Returns a dictionary
-    with TITLE, FILE and progressive NUM keys for the
-    names of the audio tracks.
-    """
-    num = 'TITLE'
-    titletracks = {}
-
-    with open(fname, 'r', encoding='utf8') as cue:
-        filecue = cue.readlines()
-
-    for line in filecue:
-        if 'FILE' in line:
-            titletracks['FILE'] = line.split('"')[1]
-
-        if 'TRACK' in line:
-            num = line.strip().split()[1]
-
-        if 'TITLE' in line:
-            title = line.split('"')[1]
-            titletracks[num] = (f'{num} - {title}.{suffix}')
-
-    return titletracks
-# ----------------------------------------------------------#
-
-
-def cuefile_check(filename: str):
-    """
-    Accepts an absolute or relative pathnames of a CUE file.
-    Returns True if error, None otherwise.
-    """
-    if not os.path.isfile(filename):
-        return True
-    if os.path.splitext(filename)[1] not in ('.cue', '.CUE'):
-        return True
-
-    return None
-# ----------------------------------------------------------#
-
-
-def make_temp_dir(**kwargs):
-    """
-    Defines a temporary folder for working safely with files
-    """
-    with tempfile.TemporaryDirectory(suffix=None,
-                                     prefix='pysplitcue_',
-                                     dir=None) as tmpdir:
-
-        run = run_process_splitting(kwargs['fname'],
-                                    kwargs['titletracks']['FILE'],
-                                    kwargs['suffix'],
-                                    tmpdir
-                                    )
-        if run:
-            msgdebug(err=f"{run}")
-            sys.exit(1)
-
-        os.chdir(tmpdir)
-        runtag = run_process_tagging(kwargs['filename'], kwargs['suffix'])
-        if runtag:
-            msgdebug(warn=f"{runtag}")
-            sys.exit(1)
-
-        os.chdir(kwargs['dirname'])
-        msbdir = make_subdir(kwargs['outputdir'])
-        if msbdir is not None:
-            msgdebug(err=f"{msbdir}")
-            msgend(abort=True)
-            sys.exit(1)
-
-        move = move_files_on_outputdir(kwargs['outputdir'],
-                                       tmpdir,
-                                       kwargs['overwrite']
-                                       )
-        if move:
-            msgdebug(err=f"{move}")
-            sys.exit(1)
-
-        msgdebug(info="Target output: ",
-                 tail=f"\033[34m'{os.path.abspath(kwargs['outputdir'])}'"
-                      f"\033[0m")
-    msgend(done=True)
-    sys.exit(0)
-# ----------------------------------------------------------#
-
-
-def main():
-    """
-    Evaluates positional arguments using the argparser module.
-    """
-    parser = argparse.ArgumentParser(prog=DATA['prg_name'],
-                                     description=DATA['short_decript'],
-                                     # add_help=False,
-                                     )
-    parser.add_argument('--version',
-                        help="Show the current version and exit",
-                        action='version',
-                        version=(f"pysplitcue v{DATA['version']} "
-                                 f"- {DATA['release']}"),
-                        )
-    parser.add_argument('-i', '--input-cuefile',
-                        metavar='IMPUTFILE',
-                        help=("An absolute or relative CUE sheet file, "
-                              "i.e. with `.cue` extension"),
-                        action="store",
-                        required=True,
-                        )
-    parser.add_argument('-f', '--format-type',
-                        choices=["wav", "wv", "flac", "ape", "mp3", "ogg"],
-                        help=("Preferred audio format to output, "
-                              "default is 'flac'"),
-                        required=False,
-                        default='flac',
-                        )
-    parser.add_argument("-o", "--output-dir",
-                        action="store",
-                        type=str,
-                        dest="outputdir",
-                        help=("Absolute or relative destination path for "
-                              "output files. If a specified destination "
-                              "folder does not exist, it will be created "
-                              "automatically. By default it is the same "
-                              "location as IMPUTFILE"),
-                        required=False,
-                        default='.')
-
-    parser.add_argument("-ow", "--overwrite",
-                        choices=["ask", "never", "always"],
-                        dest="overwrite",
-                        help=("Overwrite files on destination if they exist, "
-                              "Default is `ask` before proceeding"),
-                        required=False,
-                        default='ask')
-    parser.add_argument('-c', '--check-requires',
-                        help="List of installed or missing dependencies",
-                        action="store_true",
-                        required=False,
-                        )
-
-    args = parser.parse_args()
-
-    if args.check_requires:
-        dependencies()
-
-    elif args.input_cuefile:
-        filename = os.path.abspath(args.input_cuefile)
-        dirname = os.path.dirname(filename)
-        fname = os.path.basename(filename)
-        there = os.path.abspath(args.outputdir)
-        outputdir = there if args.outputdir != '.' else args.outputdir
-        suffix = args.format_type
-        overwrite = args.overwrite
-
-        checkfile = cuefile_check(filename)
-        if checkfile is True:
-            msgdebug(err=f"Invalid file: '{filename}'\n"
-                     f"Provide a CUE sheet file (*.cue).")
-            sys.exit(1)
+            else:
+                msgdebug(info="...done tagging")
         else:
-            os.chdir(dirname)
-            titletracks = cuefile_reading(fname, suffix)
+            msgdebug(warn=(f"Unsupported file format "
+                           f"'{self.kwargs['suffix']}' for tagging  ..skip"))
+    # ----------------------------------------------------------#
 
-        if not titletracks:
-            msgdebug(err=f"pysplitcue: error: Unable to read: '{filename}'")
-            sys.exit(1)
+    def run_process_splitting(self):
+        """
+        Run `shnsplit` command which is an alias to `shntool split`:
+        -f file Specifies a file from which to read split point data.
+        -d dir Specify output directory
+        -o str Specify  output file format extension, encoder and
+        arguments surrounded by quotes. If arguments are given,
+        then one of them must contain "%f"
+        -t fmt Name output files in user‐specified format based on CUE
+        sheet fields:
+                            %p Performer
+                            %a Album
+                            %n Track number
+                            %t Track title
+
+        Raises TempProcessError
+        Returns None otherwise.
+        """
+        if not shutil.which('shntool'):
+            #return "'shntool' is required, please install it."
+            raise TempProcessError("'shntool' is required, please install it.")
+
+        name = os.path.splitext(self.kwargs['titles']['FILE'])[0]
+        inext = os.path.splitext(self.kwargs['titles']['FILE'])[1]
+
+        mode = {'flac': 'flac flac -V --best -o %f -',
+                'wav': 'wav',
+                'mp3': 'cust ext=mp3 lame --quiet - -o %f -',
+                'ogg': 'cust ext=ogg oggenc -b 192 -o %f -',
+                'ape': 'ape',
+                'wv': 'wv',
+                }
+        cmd_split = (f'shnsplit -f "{self.kwargs["cuefile"]}" -o '
+                     f'"{mode[self.kwargs["suffix"]]}" -t "%n - %t" '
+                     f'-d "{self.kwargs["tempdir"]}" "{name}{inext}"'
+                     )
+
+        msgdebug(info="splitting audio tracks...")
+        try:
+            subprocess.run(cmd_split, check=True, shell=True)
+
+        except subprocess.CalledProcessError as error:
+            #return error
+            raise TempProcessError(error) from error
+
         else:
-            make_temp_dir(filename=filename,
-                          dirname=dirname,
-                          fname=fname,
-                          outputdir=outputdir,
-                          suffix=suffix,
-                          overwrite=overwrite,
-                          titletracks=titletracks,
-                          )
+            msgdebug(info="...done splitting")
+    # ----------------------------------------------------------#
 
+    def do_operations(self):
+        """
+        Defines a temporary folder for working safely with files.
+        This method calls following methods of this class:
+            - self.run_process_splitting()
+            - self.run_process_tagging()
+            - self.move_files_on_outputdir
+        """
+        with tempfile.TemporaryDirectory(suffix=None,
+                                         prefix='pysplitcue_',
+                                         dir=None) as tmpdir:
+            self.kwargs['tempdir'] = tmpdir
+            self.run_process_splitting()
+            os.chdir(tmpdir)
+            self.run_process_tagging()
+            os.chdir(self.kwargs['dirname'])
+            try:
+                os.makedirs(self.kwargs['outputdir'],
+                            mode=0o777, exist_ok=True)
+            except Exception as error:
+                # Catching too general exception Exception (FIXME)
+                raise TempProcessError(error) from error
 
-if __name__ == '__main__':
-    main()
+            self.move_files_on_outputdir()
+            msgdebug(info="Target output: ",
+                     tail=(f"\033[34m"
+                           f"'{os.path.abspath(self.kwargs['outputdir'])}'"
+                           f"\033[0m"))
+        msgend(done=True)
+# ----------------------------------------------------------#
+
+    def cuefile_parser(self, cuelines):
+        """
+        Given a cuelines list, it extracts the titles
+        of the audio tracks to be split.
+
+        Args:
+            cuelines: A list containing the text lines of the
+                      cuefile previously encoded with utf-8 .
+        Returns:
+            A dictionary with FILE and TRACK keys, where FILE is the
+            name of audio file associated with cue sheet file, and
+            TRACK is a progressive digit of any audio track.
+            A empty dictionary otherwise.
+
+        Raises:
+            ParserError: if found invalid data
+        """
+        num = 'TITLE'
+        titletracks = {}
+
+        for line in cuelines:
+            if 'FILE' in line:
+                titletracks['FILE'] = line.split('"')[1]
+
+            if 'TRACK' in line:
+                num = line.strip().split()[1]
+
+            if '    TITLE' in line:
+                title = line.split('"')[1]
+                titletracks[num] = (f"{num} - {title}.{self.kwargs['suffix']}")
+
+        if not titletracks or not titletracks.get('FILE'):
+            raise ParserError(f'Invalid data found: {titletracks}')
+
+        return titletracks
+    # ----------------------------------------------------------#
+
+    def open_cuefile(self):
+        """
+        Defines a temporary UTF-8 encoded CUE sheet file,
+        which is used for splitting (shnsplit) and tagging
+        (cuetag) operations .
+        """
+        self.cuefile = tempfile.NamedTemporaryFile(suffix='.cue',
+                                                   mode='w+',
+                                                   encoding='utf-8'
+                                                   )
+        self.cuefile.write(self.bdata.decode(self.encoding['encoding']))
+        self.cuefile.seek(0)
+        self.kwargs['cuefile'] = self.cuefile.name
+        self.kwargs['titles'] = self.cuefile_parser(self.cuefile.readlines())
