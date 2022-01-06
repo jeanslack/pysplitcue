@@ -4,13 +4,14 @@ Pysplitcue is a stupid wrapper for the
 [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
 and [cuetools](https://github.com/svend/cuetools) libraries.
 It splits big audio tracks using informations contained in the associated
-**"CUE"** sheet file.   
+**"CUE"** sheet file and can automatically handle files encoded other than 
+UTF-8 and ASCII encodings without modifying the source files.    
 
 # Features
 
 - Supported input formats: WAV, FLAC, APE, WavPack
-- Supported output formats: FLAC, WAV, WavPack, OGG or MP3
-- Auto-tag is supported only for FLAC, MP3 and OGG formats
+- Supported output formats: FLAC, APE, WAV, WavPack, OGG or MP3
+- Auto-tag is supported only for FLAC, MP3, OGG formats
 
 ## Requires
 
@@ -31,25 +32,32 @@ Also, if you prefer to use a GUI instead of the command line, check out
 
 
 ## Usage
-usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav, wv, flac, ape, mp3, ogg}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
+---
+#### From Command Line
 
 ```
-optional arguments:
-  -h, --help            show this help message and exit
-  --version             Show the current version and exit
-  -i IMPUTFILE, --input-cuefile IMPUTFILE
-                        An absolute or relative CUE sheet file, i.e. with `.cue` extension
-  -f {wav, wv, flac, ape, mp3, ogg}, --format-type {wav, wv, flac, ape, mp3, ogg}
-                        Preferred audio format to output, default is 'flac'
-  -o OUTPUTDIR, --output-dir OUTPUTDIR
-                        Absolute or relative destination path for output files. If a specified 
-                        destination folder does not exist, it will be created automatically. 
-                        By default it is the same location as IMPUTFILE
-  -ow {ask,never,always}, --overwrite {ask,never,always}
-                        Overwrite files on destination if they exist, Default is `ask` before proceeding
-  -c, --check-requires  List of installed or missing dependencies
+pysplitcue -i IMPUTFILE
+             [-h] 
+             [--version]  
+             [-f {wav, wv, flac, ape, mp3, ogg}] 
+             [-o OUTPUTDIR] 
+             [-ow {ask,never,always}] 
+             [-c]
+```   
+#### From Python Interpreter
 
-```  
+```python
+>>> from pysplitcue.splitcue import PySplitCue
+>>> kwargs = {'filename': '/home/user/my_file.cue',
+              'outputdir': '/home/user/some_other_dir',
+              'suffix': 'flac',
+              'overwrite': 'ask'
+             }
+>>> split = PySplitCue(**kwargs)
+>>> split.open_cuefile()
+>>> split.do_operations()
+>>> split.cuefile.close()
+```
 
 ## Examples
 

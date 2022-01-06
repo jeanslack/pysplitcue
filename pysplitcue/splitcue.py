@@ -6,7 +6,7 @@ Porpose: wraps the shnsplit and cuetag commands
 Platform: MacOs, Gnu/Linux, FreeBSD
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: January 04 2022
+Rev: January 06 2022
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -36,13 +36,18 @@ from pysplitcue.exceptions import InvalidFile, ParserError, TempProcessError
 
 class PySplitCue():
     """
-    This class implements an interface to securely wrap tools
-    like shnsplit and cuetag and other useful configurable
-    features. Since neither shnsplit nor cuetag correctly support
-    reading CUE sheet files with encodings other than ASCII/UTF-8,
-    the PySplitCue class allows you to expand their functionality
-    by working in a temporary context without modifying the source
-    files.
+    This class implements an interface to securely wrap shnsplit
+    and cuetag tools: Since neither shnsplit nor cuetag correctly
+    support reading CUE sheet files with encodings other than
+    ASCII/UTF-8, the PySplitCue class allows you to get around this
+    problem by working in a temporary context without modifying the
+    source files.
+
+    Other useful functions of the PySplitCue class can
+    be configured: you can choose between 6 audio output formats;
+    you can set an output folder; you can control overwriting of
+    files. For more details see the doc string of the constructor
+    of this class.
 
     Usage:
             >>> from pysplitcue.splitcue import PySplitCue

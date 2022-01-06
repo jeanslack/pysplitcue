@@ -1,9 +1,12 @@
 +--------------------------------+
-January  04 2022  Version 2.1.5
+January  06 2022  Version 2.1.5
 +--------------------------------+
 
-- Added support for mp3, ogg output formats
--
+- Added support for mp3, ogg output formats.
+- auto-detect CUE shee file encoding.
+- Rewrite the tests with the unittest module.
+- Now pysplitcue can also be used interactively as a Python module.
+- Improved exception handling.
 
 
 +--------------------------------+
