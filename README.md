@@ -30,8 +30,8 @@ UTF-8 and ASCII encodings without modifying the source files.
 - vorbis-tools *(includes oggenc, oggdec)*
 - monkeys-audio  *(to convert APE audio format, name depends to your O.S.)*
 - wavpack
-
-Ubuntu users can install everything with:   
+ 
+Ubuntu users can install required and optional dependencies like this:   
 `sudo apt install shntool cuetools flac lame vorbis-tools wavpack monkeys-audio`   
 
 ## Usage
@@ -82,7 +82,7 @@ and saves them in the 'my-awesome-tracklist' folder.
 
 ## License and Copyright
 
-Copyright © 2010 - 2021 Gianluca Pernigotto   
+Copyright © 2010 - 2022 Gianluca Pernigotto   
 Author and Developer: Gianluca Pernigotto   
 Mail: <jeanlucperni@gmail.com>   
 License: GPL3 (see LICENSE file in the docs folder)
