@@ -7,6 +7,10 @@ It splits big audio tracks using informations contained in the associated
 **"CUE"** sheet file and can automatically handle files encoded other than 
 UTF-8 and ASCII encodings without modifying the source files.    
 
+**Note:** there are also other alternatives to pysplitcue: 
+- [deflacue](https://github.com/idlesign/deflacue)
+- [flacon](https://github.com/flacon/flacon)
+
 # Features
 
 - Supported input formats: WAV, FLAC, APE, WavPack
@@ -16,23 +20,22 @@ UTF-8 and ASCII encodings without modifying the source files.
 ## Requires
 
 - Python >=3.6
-- chardet (The Universal Character Encoding Detector)
-- cuetools *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
-- shntool *(includes shnsplit)*
-- flac
+- [chardet](https://pypi.org/project/chardet/) (The Universal Character Encoding Detector)
+- [shntool](http://freshmeat.sourceforge.net/projects/shntool) *(includes shnsplit)*
+- [cuetools](https://github.com/svend/cuetools) *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
+
+## Optionals
+- flac 
 - lame
-- vorbis-tools *(include oggenc, oggdec)*
-- mac  *(monkey's-audio, name depends to your O.S.)*
+- vorbis-tools *(includes oggenc, oggdec)*
+- monkeys-audio  *(to convert APE audio format, name depends to your O.S.)*
 - wavpack
 
-**Note:** If you are satisfied with only getting files in `flac` format, there is 
-a better alternative to pysplitcue: [deflacue](https://github.com/idlesign/deflacue). 
-Also, if you prefer to use a GUI instead of the command line, check out 
-[flacon](https://github.com/flacon/flacon) as well.
-
+Ubuntu users can install everything with:   
+`sudo apt install shntool cuetools flac lame vorbis-tools wavpack monkeys-audio`   
 
 ## Usage
----
+
 #### From Command Line
 
 ```
@@ -43,7 +46,8 @@ pysplitcue -i IMPUTFILE
              [-o OUTPUTDIR] 
              [-ow {ask,never,always}] 
              [-c]
-```   
+```
+
 #### From Python Interpreter
 
 ```python

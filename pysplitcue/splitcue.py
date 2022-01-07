@@ -61,12 +61,15 @@ class PySplitCue():
             >>> split.do_operations()
             >>> split.cuefile.close()
     """
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 filename=str(''),
+                 outputdir=str('.'),
+                 suffix=str('flac'),
+                 overwrite=str('ask')
+                 ):
         """
-        `kwargs` must include the following keys and values:
-
-            'filename': absolute CUE sheet filename
-            'outputdir': absolute pathname to output files
+            'filename': absolute or relative CUE sheet file
+            'outputdir': absolute or relative pathname to output files
             'suffix': output format, one of "wav", "wv", "flac",
                       "ape", "mp3", "ogg"
             'overwrite': controls for overwriting files,
@@ -74,14 +77,20 @@ class PySplitCue():
                          Also see `move_files_on_outputdir`
                          method.
         """
-        self.kwargs = kwargs
-        self.kwargs['dirname'] = os.path.dirname(kwargs['filename'])
+        self.kwargs = {'filename': os.path.abspath(filename)}
+        self.kwargs['dirname'] = os.path.dirname(self.kwargs['filename'])
+        if outputdir == '.':
+            self.kwargs['outputdir'] = self.kwargs['dirname']
+        else:
+            self.kwargs['outputdir'] = os.path.abspath(outputdir)
+        self.kwargs['suffix'] = suffix
+        self.kwargs['overwrite'] = overwrite
         self.cuefile = None
 
-        fsuff = os.path.splitext(self.kwargs['filename'])[1]
-        res = os.path.isfile(self.kwargs['filename'])
+        filesuffix = os.path.splitext(self.kwargs['filename'])[1]
+        isfile = os.path.isfile(self.kwargs['filename'])
 
-        if not res or fsuff not in ('.cue', '.CUE'):
+        if not isfile or filesuffix not in ('.cue', '.CUE'):
             raise InvalidFile(f"Invalid CUE sheet file: "
                               f"'{self.kwargs['filename']}'")
 
@@ -98,11 +107,15 @@ class PySplitCue():
         operation is complete, all tracks are moved from /temp folder
         to output folder. Here evaluates what to do if files already
         exists on output folder.
-        Raises TempProcessError
-        Return None otherwise.
+        This method is called by `do_operations` method. Do not call
+        this method directly.
+        Raises:
+            TempProcessError
+        Returns:
+            None otherwise.
 
         """
-        outputdir = os.path.abspath(self.kwargs['outputdir'])
+        outputdir = self.kwargs['outputdir']
         overwrite = self.kwargs['overwrite']
 
         for track in os.listdir(self.kwargs['tempdir']):
@@ -137,9 +150,13 @@ class PySplitCue():
 
     def run_process_tagging(self):
         """
-        run `cuetag` command.
-        Raises TempProcessError
-        Returns None otherwise.
+        Run `cuetag` command.
+        This method is called by `do_operations` method.
+        Do not call this method directly.
+        Raises:
+            TempProcessError
+        Returns:
+            None otherwise.
         """
         if shutil.which('cuetag'):
             cuetag = shutil.which('cuetag')
@@ -182,8 +199,12 @@ class PySplitCue():
                             %n Track number
                             %t Track title
 
-        Raises TempProcessError
-        Returns None otherwise.
+        This method is called by `do_operations` method. Do not call
+        this method directly.
+        Raises:
+            TempProcessError
+        Returns:
+            None otherwise.
         """
         if not shutil.which('shntool'):
             #return "'shntool' is required, please install it."
@@ -287,8 +308,7 @@ class PySplitCue():
     def open_cuefile(self):
         """
         Defines a temporary UTF-8 encoded CUE sheet file,
-        which is used for splitting (shnsplit) and tagging
-        (cuetag) operations .
+        which is used for splitting and tagging operations .
         """
         self.cuefile = tempfile.NamedTemporaryFile(suffix='.cue',
                                                    mode='w+',

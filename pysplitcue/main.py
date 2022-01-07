@@ -125,8 +125,8 @@ def main():
         dependencies()
 
     elif args.input_cuefile:
-        kwargs = {'filename': os.path.abspath(args.input_cuefile)}
-        kwargs['outputdir'] = os.path.abspath(args.outputdir)
+        kwargs = {'filename': args.input_cuefile}
+        kwargs['outputdir'] = args.outputdir
         kwargs['suffix'] = args.format_type
         kwargs['overwrite'] = args.overwrite
 
@@ -135,7 +135,9 @@ def main():
             split.open_cuefile()
             split.do_operations()
             split.cuefile.close()
-        except (InvalidFile, ParserError, TempProcessError) as error:
+        except (InvalidFile,
+                ParserError,
+                TempProcessError) as error:
             msgdebug(err=f"{error}")
 
 
