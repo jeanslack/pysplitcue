@@ -1,83 +1,57 @@
+# -*- coding: utf-8 -*-
 """
-Name: str_utils
-Porpose: useful information strings
-Writer: jeanslack <jeanlucperni@gmail.com>
-license: GPL3
-####################################################################
-
-This file is part of pysplitcue.
-
-    pysplitcue is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    pysplitcue is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with pysplitcue.  If not, see <http://www.gnu.org/licenses/>.
+Name:         str_utils.py (module)
+Porpose:      module for cosmetic output command line
+Writer:       Gianluca Pernigoto <jeanlucperni@gmail.com>
+Copyright:    (c) 2015/2022 Gianluca Pernigoto <jeanlucperni@gmail.com>
+license:      GPL3
+Rev:          nov 22 2017, Dec 15 2017, Aug 8 2019, Jan 04 2021
+Code checker: flake8, pylint
 """
 
 
-def informations():
+def msgdebug(head='', info=None, warn=None, err=None, tail=''):
     """
-    All general info of the pysplitcue
+    Print debug messages:
+    ``head`` can be used for additionals custom string to use
+             at the beginning of the string.
+    ``tail`` can be used for additionals custom string to use
+             at the end of the string.
+     ``info`` print in blue color, ``warn`` print in yellow color
+     ``err`` print in red color.
     """
-    data = {'author': "Gianluca Pernigotto - Jeanslack",
-            'mail': '<jeanlucperni@gmail.com>',
-            'copyright': '© 2013-2022',
-            'version': '2.1.5',
-            'release': 'December 31 2021',
-            'rls_name': "Pysplitcue",
-            'prg_name': "pysplitcue",
-            'webpage': "https://github.com/jeanslack/pysplitcue",
-            'short_decript': ("CUE sheet Splitter, based on shntool "
-                              "and cuetools libraries."),
-            }
-    long_desript = """
-Pysplitcue is a stupid wrapper based on **shntool** and **cuetools** libraries.
-It splits big audio tracks using informations contained in the associated
-**"CUE"** sheet file. Supported input formats are WAV, FLAC, APE, WavPack.
-Supported output formats are FLAC, WAV, WavPack, OGG or MP3. Auto-tag is
-supported only for FLAC, MP3 and OGG formats.
-"""
+    if info:
+        print(f"{head}\033[32;1mINFO:\033[0m {info}{tail}")
+    elif warn:
+        print(f"{head}\033[33;1mWARNING:\033[0m {warn}{tail}")
+    elif err:
+        print(f"{head}\033[31;1mERROR:\033[0m {err}{tail}")
 
-    long_help = (f"{data['prg_name']}: {data['version']}\n"
-                 f"Webpage: <{data['webpage']}>")
 
-    short_help = "Usage: pysplitcue [OPTION] ['PATH NAME']"
+def msgcolor(head='', orange=None, green=None, azure=None, tail=''):
+    """
+    Print information messages by explicitly
+    choosing the name of the color to be displayed:
+    ``head`` can be used for additionals custom string to use
+             at the beginning of the string.
+    ``tail`` can be used for additionals custom string to use
+             at the end of the string.
+    """
+    if orange:
+        print(f"{head}\033[33;1m{orange}\033[0m{tail}")
 
-    try_help = ("Type 'pysplitcue -h' for help or, "
-                "more detailed, run 'man pysplitcue'")
+    elif green:
+        print(f"{head}\033[32;1m{green}\033[0m{tail}")
 
-    lic = f"""
-Copyright - {data['copyright']} {data['author']}
-Author and Developer: {data['author']}
-Mail: {data['mail']}
+    elif azure:
+        print(f"{head}\033[34;1m{azure}\033[0m{tail}")
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License 3 as published by
-the Free Software Foundation; version .
 
-This package is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this package; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
-"""
-
-    short_license = "GPL3 (Gnu Public License)"
-
-    return (data,
-            long_desript,
-            long_help,
-            short_help,
-            lic,
-            short_license,
-            try_help)
+def msgend(done=None, abort=None):
+    """
+    Print status messages at the end of the tasks
+    """
+    if done:
+        print("\n\033[1m..Finished!\033[0m\n")
+    elif abort:
+        print("\n\033[1m..Abort!\033[0m\n")

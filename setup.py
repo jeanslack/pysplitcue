@@ -9,7 +9,7 @@ USAGE: python3 setup.py sdist bdist_wheel
 Platform: Gnu/Linux-Unix-MacOs
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: Sept 24 2014, Jan 26 2015, Nov 22 2017, Aug 8 2019, Dec 07 2021
+Rev: Sept 24 2014, Jan 26 2015, Nov 22 2017, Aug 8 2019, Gen 03 2022
 Code checker: flake8, pylint
 ####################################################################
 
@@ -30,7 +30,7 @@ This file is part of pysplitcue.
 
 """
 from setuptools import setup, find_packages
-from pysplitcue.str_utils import informations
+from pysplitcue.datastrings import informations
 
 cr = informations()
 DATA = cr[0]
@@ -38,6 +38,12 @@ LONG_DESCRIPTION = cr[1]
 LONG_HELP = cr[2]
 SHORT_HELP = cr[3]
 LICENSE = cr[6]  # short_license
+
+INST_REQ = ["chardet>=4.0.0"]
+SETUP_REQ = ["setuptools>=47.1.1",
+             "wheel>=0.34.2",
+             "twine>=3.1.1"
+             ]
 
 CLASSIFIERS = [
             'Development Status :: 4 - Beta',
@@ -80,7 +86,9 @@ setup(name=DATA['prg_name'],
       data_files=DATA_FILES,
       zip_safe=False,
       python_requires=">=3.6",
+      install_requires=INST_REQ,
+      setup_requires=SETUP_REQ,
       entry_points={
-          "console_scripts": ['pysplitcue = pysplitcue.splitcue:main']},
+          "console_scripts": ['pysplitcue = pysplitcue.main:main']},
       classifiers=CLASSIFIERS,
       )

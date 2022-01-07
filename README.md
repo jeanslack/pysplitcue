@@ -4,51 +4,64 @@ Pysplitcue is a stupid wrapper for the
 [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
 and [cuetools](https://github.com/svend/cuetools) libraries.
 It splits big audio tracks using informations contained in the associated
-**"CUE"** sheet file.   
+**"CUE"** sheet file and can automatically handle files encoded other than 
+UTF-8 and ASCII encodings without modifying the source files.    
+
+**Note:** there are also other alternatives to pysplitcue: 
+- [deflacue](https://github.com/idlesign/deflacue)
+- [flacon](https://github.com/flacon/flacon)
 
 # Features
 
 - Supported input formats: WAV, FLAC, APE, WavPack
-- Supported output formats: FLAC, WAV, WavPack, OGG or MP3
-- Auto-tag is supported only for FLAC, MP3 and OGG formats
+- Supported output formats: FLAC, APE, WAV, WavPack, OGG or MP3
+- Auto-tag is supported only for FLAC, MP3, OGG formats
 
 ## Requires
 
 - Python >=3.6
-- cuetools *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
-- shntool *(includes shnsplit)*
-- flac
+- [chardet](https://pypi.org/project/chardet/) (The Universal Character Encoding Detector)
+- [shntool](http://freshmeat.sourceforge.net/projects/shntool) *(includes shnsplit)*
+- [cuetools](https://github.com/svend/cuetools) *(includes cuebreakpoints, cueconvert, cueprint, cuetag)*
+
+## Optionals
+- flac 
 - lame
-- vorbis-tools *(include oggenc, oggdec)*
-- mac  *(monkey's-audio, name depends to your O.S.)*
+- vorbis-tools *(includes oggenc, oggdec)*
+- monkeys-audio  *(to convert APE audio format, name depends to your O.S.)*
 - wavpack
-
-**Note:** If you are satisfied with only getting files in `flac` format, there is 
-a better alternative to pysplitcue: [deflacue](https://github.com/idlesign/deflacue). 
-Also, if you prefer to use a GUI instead of the command line, check out 
-[flacon](https://github.com/flacon/flacon) as well.
-
+ 
+Ubuntu users can install required and optional dependencies like this:   
+`sudo apt install shntool cuetools flac lame vorbis-tools wavpack monkeys-audio`   
 
 ## Usage
-usage: `pysplitcue [-h] [--version] -i IMPUTFILE [-f {wav, wv, flac, ape, mp3, ogg}] [-o OUTPUTDIR] [-ow {ask,never,always}] [-c]`   
+
+#### From Command Line
 
 ```
-optional arguments:
-  -h, --help            show this help message and exit
-  --version             Show the current version and exit
-  -i IMPUTFILE, --input-cuefile IMPUTFILE
-                        An absolute or relative CUE sheet file, i.e. with `.cue` extension
-  -f {wav, wv, flac, ape, mp3, ogg}, --format-type {wav, wv, flac, ape, mp3, ogg}
-                        Preferred audio format to output, default is 'flac'
-  -o OUTPUTDIR, --output-dir OUTPUTDIR
-                        Absolute or relative destination path for output files. If a specified 
-                        destination folder does not exist, it will be created automatically. 
-                        By default it is the same location as IMPUTFILE
-  -ow {ask,never,always}, --overwrite {ask,never,always}
-                        Overwrite files on destination if they exist, Default is `ask` before proceeding
-  -c, --check-requires  List of installed or missing dependencies
+pysplitcue -i IMPUTFILE
+             [-h] 
+             [--version]  
+             [-f {wav, wv, flac, ape, mp3, ogg}] 
+             [-o OUTPUTDIR] 
+             [-ow {ask,never,always}] 
+             [-c]
+```
 
-```  
+#### From Python Interpreter
+
+```python
+>>> from pysplitcue.splitcue import PySplitCue
+>>> kwargs = {'filename': '/home/user/my_file.cue',
+              'outputdir': '/home/user/some_other_dir',
+              'suffix': 'flac',
+              'overwrite': 'ask'
+             }
+>>> split = PySplitCue(**kwargs)
+>>> split.open_cuefile()
+>>> split.do_operations()
+>>> split.cuefile.close()
+```
 
 ## Examples
 
@@ -69,7 +82,7 @@ and saves them in the 'my-awesome-tracklist' folder.
 
 ## License and Copyright
 
-Copyright © 2010 - 2021 Gianluca Pernigotto   
+Copyright © 2010 - 2022 Gianluca Pernigotto   
 Author and Developer: Gianluca Pernigotto   
 Mail: <jeanlucperni@gmail.com>   
 License: GPL3 (see LICENSE file in the docs folder)
