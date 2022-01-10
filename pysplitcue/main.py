@@ -6,7 +6,7 @@ Porpose: provides an argparser interface for PySplitCue class
 Platform: MacOs, Gnu/Linux, FreeBSD
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: January 05 2022
+Rev: January 10 2022
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -31,7 +31,7 @@ import argparse
 
 from pysplitcue.datastrings import informations
 from pysplitcue.splitcue import PySplitCue
-from pysplitcue.str_utils import msgcolor, msgdebug
+from pysplitcue.str_utils import msgcolor, msgdebug, msgend, msg
 
 from pysplitcue.exceptions import InvalidFile, ParserError, TempProcessError
 
@@ -47,21 +47,21 @@ def dependencies():
     listtools = ('shntool', 'cuetag', 'cuetag.sh')
     listencoders = ('flac', 'mac', 'wavpack', 'lame', 'oggenc')
 
-    print('--------------------------------')
+    msg('--------------------------------')
     msgcolor(green="Required tools:")
     for required in listtools:
         if which(required, mode=os.F_OK | os.X_OK, path=None):
             msgcolor(head=f"Check for: '{required}'", azure="..Ok")
         else:
             msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
-    print('--------------------------------')
+    msg('--------------------------------')
     msgcolor(green="Available encoders:")
     for required in listencoders:
         if which(required, mode=os.F_OK | os.X_OK, path=None):
             msgcolor(head=f"Check for: '{required}'", azure="..Ok")
         else:
             msgcolor(head=f"Check for: '{required}'", orange="..Not Installed")
-    print('--------------------------------')
+    msg('--------------------------------')
 # ----------------------------------------------------------#
 
 
@@ -83,9 +83,9 @@ def main():
     parser.add_argument('-i', '--input-cuefile',
                         metavar='IMPUTFILE',
                         help=("An absolute or relative CUE sheet file, "
-                              "i.e. with `.cue` extension"),
+                              "example: -i 'mycuesheetfile.cue'"),
                         action="store",
-                        required=True,
+                        required=False,
                         )
     parser.add_argument('-f', '--format-type',
                         choices=["wav", "wv", "flac", "ape", "mp3", "ogg"],
@@ -96,29 +96,28 @@ def main():
                         )
     parser.add_argument("-o", "--output-dir",
                         action="store",
-                        type=str,
                         dest="outputdir",
                         help=("Absolute or relative destination path for "
                               "output files. If a specified destination "
                               "folder does not exist, it will be created "
                               "automatically. By default it is the same "
-                              "location as IMPUTFILE"),
+                              "path location as IMPUTFILE"),
                         required=False,
-                        default='.')
-
+                        default='.'
+                        )
     parser.add_argument("-ow", "--overwrite",
                         choices=["ask", "never", "always"],
                         dest="overwrite",
                         help=("Overwrite files on destination if they exist, "
                               "Default is `ask` before proceeding"),
                         required=False,
-                        default='ask')
+                        default='ask'
+                        )
     parser.add_argument('-c', '--check-requires',
                         help="List of installed or missing dependencies",
                         action="store_true",
                         required=False,
                         )
-
     args = parser.parse_args()
 
     if args.check_requires:
@@ -132,13 +131,18 @@ def main():
 
         try:
             split = PySplitCue(**kwargs)
-            split.open_cuefile()
-            split.do_operations()
+            print(split.open_cuefile())
+            #split.do_operations()
             split.cuefile.close()
+
         except (InvalidFile,
                 ParserError,
                 TempProcessError) as error:
             msgdebug(err=f"{error}")
+        else:
+            msgend(done=True)
+    else:
+        parser.error("Requires an INPUTFILE, please provide it")
 
 
 if __name__ == '__main__':

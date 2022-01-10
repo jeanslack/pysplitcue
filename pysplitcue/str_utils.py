@@ -5,7 +5,7 @@ Porpose:      module for cosmetic output command line
 Writer:       Gianluca Pernigoto <jeanlucperni@gmail.com>
 Copyright:    (c) 2015/2022 Gianluca Pernigoto <jeanlucperni@gmail.com>
 license:      GPL3
-Rev:          nov 22 2017, Dec 15 2017, Aug 8 2019, Jan 04 2021
+Rev:          Jan 10 2022
 Code checker: flake8, pylint
 """
 
@@ -52,6 +52,13 @@ def msgend(done=None, abort=None):
     Print status messages at the end of the tasks
     """
     if done:
-        print("\n\033[1m..Finished!\033[0m\n")
+        print("\033[1m..Finished!\033[0m\n")
     elif abort:
-        print("\n\033[1m..Abort!\033[0m\n")
+        print("\033[1m..Abort!\033[0m\n")
+
+
+def msg(message):
+    """
+    Print any string messages
+    """
+    print(message)
