@@ -6,7 +6,7 @@ Porpose: wraps the shnsplit and cuetag commands
 Platform: MacOs, Gnu/Linux, FreeBSD
 Writer: jeanslack <jeanlucperni@gmail.com>
 license: GPL3
-Rev: January 06 2022
+Rev: January 10 2022
 Code checker: flake8 and pylint
 ####################################################################
 
@@ -30,7 +30,7 @@ import shutil
 import subprocess
 import tempfile
 import chardet
-from pysplitcue.str_utils import msgdebug, msgend
+from pysplitcue.str_utils import msgdebug
 from pysplitcue.exceptions import InvalidFile, ParserError, TempProcessError
 
 
@@ -141,7 +141,7 @@ class PySplitCue():
                 try:
                     shutil.move(os.path.join(self.kwargs['tempdir'], track),
                                 os.path.join(outputdir, track))
-                # Catching too general exception Exception (FIXME)
+
                 except Exception as error:
                     raise TempProcessError(error) from error
 
@@ -207,7 +207,6 @@ class PySplitCue():
             None otherwise.
         """
         if not shutil.which('shntool'):
-            #return "'shntool' is required, please install it."
             raise TempProcessError("'shntool' is required, please install it.")
 
         name = os.path.splitext(self.kwargs['titles']['FILE'])[0]
@@ -230,7 +229,6 @@ class PySplitCue():
             subprocess.run(cmd_split, check=True, shell=True)
 
         except subprocess.CalledProcessError as error:
-            #return error
             raise TempProcessError(error) from error
 
         else:
@@ -257,7 +255,6 @@ class PySplitCue():
                 os.makedirs(self.kwargs['outputdir'],
                             mode=0o777, exist_ok=True)
             except Exception as error:
-                # Catching too general exception Exception (FIXME)
                 raise TempProcessError(error) from error
 
             self.move_files_on_outputdir()
@@ -265,21 +262,17 @@ class PySplitCue():
                      tail=(f"\033[34m"
                            f"'{os.path.abspath(self.kwargs['outputdir'])}'"
                            f"\033[0m"))
-        msgend(done=True)
 # ----------------------------------------------------------#
 
-    def cuefile_parser(self, cuelines):
+    def cuefile_parser(self):
         """
-        Given a cuelines list, it extracts the titles
-        of the audio tracks to be split.
+        Gets the large audio filename and enumerates the titles of
+        all the tracks to be split.
 
-        Args:
-            cuelines: A list containing the text lines of the
-                      cuefile previously encoded with utf-8 .
         Returns:
             A dictionary with FILE and TRACK keys, where FILE is the
-            name of audio file associated with cue sheet file, and
-            TRACK is a progressive digit of any audio track.
+            name of audio file associated with cue sheet file, TRACK
+            is a progressive digit of any audio track.
             A empty dictionary otherwise.
 
         Raises:
@@ -288,7 +281,7 @@ class PySplitCue():
         num = 'TITLE'
         titletracks = {}
 
-        for line in cuelines:
+        for line in self.cuefile.readlines():
             if 'FILE' in line:
                 titletracks['FILE'] = line.split('"')[1]
 
@@ -307,8 +300,11 @@ class PySplitCue():
 
     def open_cuefile(self):
         """
-        Defines a temporary UTF-8 encoded CUE sheet file,
-        which is used for splitting and tagging operations .
+        Defines a new UTF-8 encoded CUE sheet file as temporary
+        file and retrieves titles names to be splitted.
+
+        Returns:
+            data dict
         """
         self.cuefile = tempfile.NamedTemporaryFile(suffix='.cue',
                                                    mode='w+',
@@ -316,5 +312,8 @@ class PySplitCue():
                                                    )
         self.cuefile.write(self.bdata.decode(self.encoding['encoding']))
         self.cuefile.seek(0)
-        self.kwargs['cuefile'] = self.cuefile.name
-        self.kwargs['titles'] = self.cuefile_parser(self.cuefile.readlines())
+        self.kwargs['cuefile'] = self.cuefile.name  # /tmp/blablabla.cue
+        self.kwargs['titles'] = self.cuefile_parser()
+
+        return {'temp_cuefile': self.kwargs['cuefile'],
+                'title_tracks': self.kwargs['titles']}

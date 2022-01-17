@@ -27,7 +27,7 @@ OUTFORMAT = 'flac'
 OVERWRITE = "always"
 
 
-class ParseCueSheetTestCaseISO(unittest.TestCase):
+class ParseCueSheetTestCase(unittest.TestCase):
     """
     Test case to get data from cue sheet file
     """
@@ -48,7 +48,6 @@ class ParseCueSheetTestCaseISO(unittest.TestCase):
         with self.assertRaises(InvalidFile):
             PySplitCue(**{**self.args, **fname})
 
-
     def test_parser_with_iso_file_encoding(self):
         """
         test cuefile parsing with ISO-8859-1 encoding
@@ -57,19 +56,23 @@ class ParseCueSheetTestCaseISO(unittest.TestCase):
         split = PySplitCue(**{**self.args, **fname})
         parser = split.open_cuefile()
         split.cuefile.close()
-        self.assertEqual(parser, None)
+        self.assertEqual(parser['title_tracks']['FILE'], 'Three Samples.flac')
+        self.assertEqual(parser['title_tracks']['01'], '01 - è di 300 Hz.flac')
+        self.assertEqual(parser['title_tracks']['02'], '02 - è di 400 Hz.flac')
+        self.assertEqual(parser['title_tracks']['03'], '03 - è di 500 Hz.flac')
 
     def test_parser_with_ascii_file_encoding(self):
         """
         test cuefile parsing with ASCII encoding
         """
-
         fname = {'filename': FILECUE_ASCII}
-
         split = PySplitCue(**{**self.args, **fname})
         parser = split.open_cuefile()
         split.cuefile.close()
-        self.assertEqual(parser, None)
+        self.assertEqual(parser['title_tracks']['FILE'], 'Three Samples.flac')
+        self.assertEqual(parser['title_tracks']['01'], '01 - 300 Hz.flac')
+        self.assertEqual(parser['title_tracks']['02'], '02 - 400 Hz.flac')
+        self.assertEqual(parser['title_tracks']['03'], '03 - 500 Hz.flac')
 
 
 def main():
