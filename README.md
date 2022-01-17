@@ -10,6 +10,7 @@ UTF-8 and ASCII encodings without modifying the source files.
 **Note:** there are also other alternatives to pysplitcue: 
 - [deflacue](https://github.com/idlesign/deflacue)
 - [flacon](https://github.com/flacon/flacon)
+- [FFcuesplitter](https://github.com/jeanslack/FFcuesplitter)
 
 # Features
 

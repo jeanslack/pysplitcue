@@ -131,8 +131,8 @@ def main():
 
         try:
             split = PySplitCue(**kwargs)
-            print(split.open_cuefile())
-            #split.do_operations()
+            split.open_cuefile()
+            split.do_operations()
             split.cuefile.close()
 
         except (InvalidFile,
