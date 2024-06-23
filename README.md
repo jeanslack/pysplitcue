@@ -76,11 +76,6 @@ To split and convert several audio formats into the relative individual
 This command splits the individual audio tracks into `wav` format 
 and saves them in the 'my-awesome-tracklist' folder.   
 
-
-## Installation
-
-`python3 -m pip install pysplitcue`
-
 ## License and Copyright
 
 Copyright © 2010 - 2022 Gianluca Pernigotto   
