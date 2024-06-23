@@ -1,4 +1,6 @@
-# Pysplitcue - CUE sheet splitter, based on shntool and cuetools libraries.
+# Pysplitcue - CUE sheet splitter, based on shntool and cuetools libraries. 
+
+## This repository has been archived, use [FFcuesplitter](https://github.com/jeanslack/FFcuesplitter) instead.
 
 Pysplitcue is a stupid wrapper for the 
 [shntool](http://freshmeat.sourceforge.net/projects/shntool) 
